@@ -6,7 +6,7 @@ if ($conexion->connect_error) {
 }
 
 $usuario = "admin";  // cámbialo
-$pass_plano = "123456"; // cámbialo
+$pass_plano = "1234"; // cámbialo
 $pass_hash = password_hash($pass_plano, PASSWORD_DEFAULT);
 
 $sql = "INSERT INTO usuarios (usuario, password) VALUES ('$usuario', '$pass_hash')";
