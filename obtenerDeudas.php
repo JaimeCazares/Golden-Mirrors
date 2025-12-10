@@ -1,9 +1,5 @@
 <?php
-$conexion = new mysqli("localhost", "root", "", "apuestas");
-
-if ($conexion->connect_error) {
-    die("Error: " . $conexion->connect_error);
-}
+require "conexion.php";
 
 $resultado = $conexion->query("SELECT nombre, pagada FROM deudas_estado");
 
