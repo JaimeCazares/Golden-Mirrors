@@ -897,7 +897,6 @@ input:focus {
 #histLigaSelect{
   background: #00b4d8;
 }
-/* ⚖️ Contenedor de pesos (CLON de deudas) */
 .pesos-container {
   position: fixed;
   top: 10px;
@@ -908,37 +907,37 @@ input:focus {
   padding: 10px 14px;
   color: white;
   font-size: 13px;
-  z-index: 9998;
+  z-index: 9999;
+
   display: grid;
-  grid-template-columns: repeat(4, auto) 1fr;
+  grid-template-columns: repeat(4, auto) 1fr; /* pesos + indicador */
   column-gap: 10px;
   row-gap: 6px;
   align-items: center;
-  box-shadow: 0 0 12px rgba(0, 180, 255, 0.15);
-  backdrop-filter: blur(8px);
-}
 
-/* Lista de pesos */
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.15);
+  backdrop-filter: blur(8px);
+  max-width: 700px;
+}
 #listaPesos {
   list-style: none;
   padding: 0;
   margin: 0;
+
   grid-column: 1 / span 4;
   display: grid;
   grid-template-columns: repeat(4, auto);
   column-gap: 8px;
   row-gap: 6px;
 }
-
-/* Botones de peso */
 #listaPesos li {
   cursor: pointer;
   user-select: none;
-  background: linear-gradient(145deg, #2d7cff, #1c3f99);
+  background: linear-gradient(145deg, #3c7cff, #244bb0);
   color: #fff;
   padding: 2px 8px;
   border-radius: 6px;
-  box-shadow: 0 0 6px rgba(0, 120, 255, 0.5);
+  box-shadow: 0 0 6px rgba(60, 124, 255, 0.5);
   transition: all 0.25s ease;
   font-weight: 500;
   text-align: center;
@@ -947,37 +946,26 @@ input:focus {
 
 #listaPesos li:hover {
   transform: scale(1.06);
-  box-shadow: 0 0 8px rgba(80, 160, 255, 0.9);
+  box-shadow: 0 0 8px rgba(100, 160, 255, 0.9);
 }
-
-/* Peso seleccionado */
-#listaPesos li.seleccionado {
-  background: linear-gradient(145deg, #00ff99, #00a35c);
-  box-shadow: 0 0 8px rgba(0, 255, 150, 0.8);
-  text-decoration: none;
-}
-
-/* Indicador a la derecha */
-#pesoActual {
+#pesoSeleccionado {
   grid-column: 5;
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   font-weight: bold;
   text-align: center;
-  background: linear-gradient(145deg, #00c3ff, #007aa8);
+  background: linear-gradient(145deg, #00e0ff, #0088a8);
   color: #022;
   padding: 6px 10px;
   border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 200, 255, 0.7);
+  box-shadow: 0 0 8px rgba(0, 220, 255, 0.7);
   font-size: 13px;
   align-self: start;
   justify-self: end;
 }
-
-/* ✏️ Botón editar */
 #editarPesoBtn {
   position: fixed;
   top: 10px;
-  left: calc(50% + 260px);
+  left: calc(50% + 260px); /* ajusta si quieres */
   background: linear-gradient(145deg, #1c2541, #0f172a);
   color: white;
   border: none;
@@ -993,5 +981,3 @@ input:focus {
 #editarPesoBtn:hover {
   transform: scale(1.1);
 }
-
-

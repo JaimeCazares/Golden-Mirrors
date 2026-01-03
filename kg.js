@@ -1,10 +1,10 @@
 const pesos = document.querySelectorAll('#listaPesos li');
-const pesoActual = document.getElementById('pesoActual');
+const indicador = document.getElementById('pesoSeleccionado');
 
-pesos.forEach(peso => {
-  peso.addEventListener('click', () => {
-    pesos.forEach(p => p.classList.remove('seleccionado'));
-    peso.classList.add('seleccionado');
-    pesoActual.textContent = peso.dataset.peso + ' kg';
+pesos.forEach(p => {
+  p.addEventListener('click', () => {
+    pesos.forEach(x => x.classList.remove('seleccionado'));
+    p.classList.add('seleccionado');
+    indicador.textContent = p.dataset.peso + ' kg';
   });
 });
