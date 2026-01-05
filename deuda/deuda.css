@@ -85,7 +85,7 @@
 /* ✏️ Botón editar — fuera del recuadro */
 #editarBtn {
   position: fixed;
-  top: 10px;
+  top: 55px;
   left: 550px; /* 👈 justo al lado derecho del recuadro */
   background: linear-gradient(145deg, #1c2541, #0f172a);
   color: white;

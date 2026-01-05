@@ -1,5 +1,5 @@
 .pesos-container {
-  position: sticky;
+  position: relative;
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
@@ -27,29 +27,11 @@
   margin: 0;
 
   grid-column: 1 / span 4;
-  display: grid;
-  grid-template-columns: repeat(4, auto);
-  column-gap: 8px;
-  row-gap: 6px;
-}
 
-#listaPesos li {
-  cursor: pointer;
-  user-select: none;
-  background: linear-gradient(145deg, #3c7cff, #244bb0);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 6px;
-  box-shadow: 0 0 6px rgba(60, 124, 255, 0.5);
-  transition: all 0.25s ease;
-  font-weight: 500;
-  text-align: center;
-  font-size: 12px;
-}
-
-#listaPesos li:hover {
-  transform: scale(1.06);
-  box-shadow: 0 0 8px rgba(100, 160, 255, 0.9);
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: nowrap;   /* 🔥 todos en una sola fila */
 }
 
 #pesoSeleccionado {
@@ -65,24 +47,75 @@
   font-size: 13px;
   align-self: start;
   justify-self: end;
-}
-
-#editarPesoBtn {
-  position: fixed;
-  top: 10px;
-  left: calc(50% + 260px);
-  background: linear-gradient(145deg, #1c2541, #0f172a);
-  color: white;
-  border: none;
-  padding: 6px 8px;
-  border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
-  transition: all 0.25s ease;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
-  z-index: 10000;
+  position: relative;
+}
+#pesoSeleccionado input {
+  width: 42px;          /* 👈 pequeño */
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #022;
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  padding: 0;
 }
 
-#editarPesoBtn:hover {
-  transform: scale(1.1);
+/* botones de peso normales (gris) */
+#listaPesos li {
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(145deg, #555555, #333333);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  transition: background 0.2s ease, transform 0.2s ease;
+  font-weight: 500;
+  text-align: center;
+  font-size: 12px;
 }
+@keyframes rainbowMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* pesos mayores Y peso actual */
+#listaPesos li.superior,
+#listaPesos li.actual {
+  background: linear-gradient(145deg, #4da6ff, #2d6cdf);
+  color: #fff;
+}
+
+/* hover */
+#listaPesos li:hover {
+  transform: scale(1.06);
+}
+
+@keyframes rainbowMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* pesos mayores Y peso actual */
+#listaPesos li.superior,
+#listaPesos li.actual {
+  background: linear-gradient(
+    270deg,
+    #6a5cff,   /* azul */
+    #c77dff,   /* lila */
+    #ff8fab,   /* rosa */
+    #80ffdb,   /* verde agua */
+    #6a5cff
+  );
+  background-size: 400% 400%;
+  animation: rainbowMove 6s ease infinite;
+
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 6px rgba(120, 120, 255, 0.4);
+}
+
