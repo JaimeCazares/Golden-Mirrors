@@ -1,17 +1,31 @@
 function initKg() {
 
+  // =========================
+  // ELEMENTOS
+  // =========================
   const listaPesos = document.querySelectorAll("#listaPesos li");
   const pesoSeleccionado = document.getElementById("pesoSeleccionado");
 
-  if (!listaPesos.length || !pesoSeleccionado) {
-    console.error("❌ Elementos de kg no encontrados");
+  const btnHistorial = document.getElementById("verHistorialKg");
+  const modalKg = document.getElementById("modalKg");
+  const cerrarKgModal = document.getElementById("cerrarKgModal");
+
+  const historialKgLista = document.getElementById("historialKgLista");
+  const nuevoPeso = document.getElementById("nuevoPeso");
+  const fotoPeso = document.getElementById("fotoPeso");
+  const guardarPesoHistorial = document.getElementById("guardarPesoHistorial");
+
+  if (!pesoSeleccionado || !listaPesos.length) {
+    console.error("❌ Elementos KG no encontrados");
     return;
   }
 
   let modoEdicion = false;
   let pesoActual = 0;
 
-  // ===== CARGAR DESDE BD =====
+  // =========================
+  // CARGAR PESO ACTUAL
+  // =========================
   fetch("kg/obtenerKg.php", { cache: "no-store" })
     .then(res => res.json())
     .then(data => {
@@ -22,7 +36,9 @@ function initKg() {
       actualizarIndicador();
     });
 
-  // ===== EDITAR =====
+  // =========================
+  // EDITAR PESO ACTUAL
+  // =========================
   pesoSeleccionado.addEventListener("click", () => {
     if (modoEdicion) return;
     modoEdicion = true;
@@ -36,22 +52,21 @@ function initKg() {
     input.select();
 
     input.addEventListener("keydown", e => {
-      if (e.key === "Enter") guardarPeso(input.value);
+      if (e.key === "Enter") guardarPesoActual(input.value);
     });
 
-    input.addEventListener("blur", () => guardarPeso(input.value));
+    input.addEventListener("blur", () => guardarPesoActual(input.value));
   });
 
-  // ===== CLICK EN PESOS =====
   listaPesos.forEach(li => {
     li.addEventListener("mousedown", e => {
       if (!modoEdicion) return;
       e.preventDefault();
-      guardarPeso(li.dataset.peso);
+      guardarPesoActual(li.dataset.peso);
     });
   });
 
-  function guardarPeso(valor) {
+  function guardarPesoActual(valor) {
     valor = parseFloat(valor);
 
     if (!valor || isNaN(valor)) {
@@ -77,7 +92,6 @@ function initKg() {
   function actualizarIndicador() {
     listaPesos.forEach(li => {
       li.classList.remove("superior", "actual");
-
       const pesoLi = parseFloat(li.dataset.peso);
       if (!pesoActual) return;
 
@@ -88,4 +102,75 @@ function initKg() {
       }
     });
   }
+
+  // =========================
+  // MODAL HISTORIAL
+  // =========================
+  btnHistorial.addEventListener("click", () => {
+    modalKg.style.display = "flex";
+    cargarHistorialKg();
+  });
+
+  cerrarKgModal.addEventListener("click", () => {
+    modalKg.style.display = "none";
+  });
+
+  window.addEventListener("click", e => {
+    if (e.target === modalKg) modalKg.style.display = "none";
+  });
+
+  // =========================
+  // CARGAR HISTORIAL
+  // =========================
+  function cargarHistorialKg() {
+    historialKgLista.innerHTML = "Cargando...";
+
+    fetch("kg/obtenerHistorialKg.php", { cache: "no-store" })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.length) {
+          historialKgLista.innerHTML = "<p>Sin registros</p>";
+          return;
+        }
+
+        historialKgLista.innerHTML = data.map(item => `
+          <div class="item-historial">
+            <strong>Semana ${item.semana}</strong><br>
+            📅 ${item.fecha}<br>
+            ⚖️ ${item.peso} kg<br>
+            ${item.foto ? `<img src="${item.foto}" class="foto-peso">` : ""}
+          </div>
+        `).join("");
+      });
+  }
+
+  // =========================
+  // GUARDAR NUEVO REGISTRO
+  // =========================
+  guardarPesoHistorial.addEventListener("click", () => {
+    const peso = parseFloat(nuevoPeso.value);
+
+    if (!peso || isNaN(peso)) {
+      alert("Ingresa un peso válido");
+      return;
+    }
+
+    const datos = new FormData();
+    datos.append("peso", peso);
+    if (fotoPeso.files[0]) {
+      datos.append("foto", fotoPeso.files[0]);
+    }
+
+    fetch("kg/guardarHistorialKg.php", {
+      method: "POST",
+      body: datos
+    })
+      .then(res => res.json())
+      .then(() => {
+        nuevoPeso.value = "";
+        fotoPeso.value = "";
+        cargarHistorialKg();
+      });
+  });
+
 }
