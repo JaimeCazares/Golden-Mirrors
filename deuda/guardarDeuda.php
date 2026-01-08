@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . "/../conexion.php";
+require_once __DIR__ . '/../conexion.php';
 
 $id = $_POST['id'];
 $pagada = $_POST['pagada'];

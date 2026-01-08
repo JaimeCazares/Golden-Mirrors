@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . "/../conexion.php";
+require_once __DIR__ . '/../conexion.php';
 
 $resultado = $conexion->query("SELECT id, pagada FROM deudas_estado");
 

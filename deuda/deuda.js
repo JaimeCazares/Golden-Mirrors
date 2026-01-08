@@ -21,7 +21,7 @@ function initDeuda() {
   cargarDeudas();
 
   function cargarDeudas() {
-    fetch("deuda/obtenerDeudas.php", { cache: "no-store" })
+    fetch("/deuda/obtenerDeudas.php", { cache: "no-store" })
       .then(res => res.json())
       .then(data => {
         lista.querySelectorAll("li").forEach(li => {
@@ -40,7 +40,7 @@ function initDeuda() {
   datos.append("id", id);
   datos.append("pagada", pagada);
 
-  fetch("deuda/guardarDeuda.php", {
+  fetch("/deuda/guardarDeuda.php", {
     method: "POST",
     body: datos
   });
