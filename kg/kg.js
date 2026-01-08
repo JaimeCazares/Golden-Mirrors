@@ -9,19 +9,29 @@ function initKg() {
   }
 
   let modoEdicion = false;
+  let pesoActual = 0;
 
-  // ===== ENTRAR EN MODO EDICIÓN =====
+  // ===== CARGAR DESDE BD =====
+  fetch("kg/obtenerKg.php", { cache: "no-store" })
+    .then(res => res.json())
+    .then(data => {
+      pesoActual = parseFloat(data.peso) || 0;
+      if (pesoActual > 0) {
+        pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
+      }
+      actualizarIndicador();
+    });
+
+  // ===== EDITAR =====
   pesoSeleccionado.addEventListener("click", () => {
     if (modoEdicion) return;
-
     modoEdicion = true;
-    const valorActual = parseInt(pesoSeleccionado.textContent) || "";
 
     pesoSeleccionado.innerHTML = `
-      <input type="number" id="inputPeso" value="${valorActual}">
+      <input type="number" step="0.01" id="inputPeso" value="${pesoActual || ""}">
     `;
 
-    const input = pesoSeleccionado.querySelector("#inputPeso");
+    const input = document.getElementById("inputPeso");
     input.focus();
     input.select();
 
@@ -29,12 +39,10 @@ function initKg() {
       if (e.key === "Enter") guardarPeso(input.value);
     });
 
-    input.addEventListener("blur", () => {
-      guardarPeso(input.value);
-    });
+    input.addEventListener("blur", () => guardarPeso(input.value));
   });
 
-  // ===== CLICK EN PESOS PREDEFINIDOS =====
+  // ===== CLICK EN PESOS =====
   listaPesos.forEach(li => {
     li.addEventListener("mousedown", e => {
       if (!modoEdicion) return;
@@ -44,10 +52,22 @@ function initKg() {
   });
 
   function guardarPeso(valor) {
+    valor = parseFloat(valor);
+
     if (!valor || isNaN(valor)) {
       pesoSeleccionado.textContent = "PESO";
+      pesoActual = 0;
     } else {
-      pesoSeleccionado.textContent = valor + " kg";
+      pesoActual = valor;
+      pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
+
+      const datos = new FormData();
+      datos.append("peso", pesoActual);
+
+      fetch("kg/guardarKg.php", {
+        method: "POST",
+        body: datos
+      });
     }
 
     modoEdicion = false;
@@ -55,22 +75,17 @@ function initKg() {
   }
 
   function actualizarIndicador() {
-    const valorActual = parseInt(pesoSeleccionado.textContent);
-
     listaPesos.forEach(li => {
       li.classList.remove("superior", "actual");
 
-      const pesoLi = parseInt(li.dataset.peso);
+      const pesoLi = parseFloat(li.dataset.peso);
+      if (!pesoActual) return;
 
-      if (isNaN(valorActual)) return;
-
-      if (pesoLi === valorActual) {
-        li.classList.add("actual");          // 👈 MISMO PESO
-      } else if (pesoLi > valorActual) {
-        li.classList.add("superior");        // 👈 MAYORES
+      if (Math.round(pesoLi) === Math.round(pesoActual)) {
+        li.classList.add("actual");
+      } else if (pesoLi > pesoActual) {
+        li.classList.add("superior");
       }
     });
   }
-
-  actualizarIndicador();
 }
