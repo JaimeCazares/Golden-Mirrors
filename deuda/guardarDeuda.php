@@ -1,12 +1,13 @@
 <?php
-require_once __DIR__ . '/../conexion.php';
+require_once __DIR__ . "/../conexion.php";
 
-$id = $_POST['id'];
-$pagada = $_POST['pagada'];
+$nombre = $_POST['nombre'];
+$pagada = intval($_POST['pagada']);
 
-$sql = "UPDATE deudas_estado SET pagada=? WHERE id=?";
-$stmt = $conexion->prepare($sql);
-$stmt->bind_param("ii", $pagada, $id);
+$stmt = $conexion->prepare(
+    "UPDATE deudas_estado SET pagada=? WHERE nombre=?"
+);
+$stmt->bind_param("is", $pagada, $nombre);
 $stmt->execute();
 
 echo "OK";
