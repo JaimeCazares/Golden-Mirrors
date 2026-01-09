@@ -6,51 +6,65 @@ const folioSpan = document.getElementById("folioCupon");
 
 let total = 0;
 
+/* =========================
+   CUPÓN
+   ========================= */
 cuponOverlay.style.display = "none";
 
 cerrarCupon.onclick = () => {
   cuponOverlay.style.display = "none";
 };
 
+/* =========================
+   CARGA INICIAL
+   ========================= */
 fetch("obtener_ahorro.php")
   .then(res => res.json())
   .then(retos => {
 
     retos.forEach(reto => {
 
-      let marcadasActuales = Number(reto.marcadas);
-      let totalVeces = Number(reto.total_veces);
-      let restantes = totalVeces - marcadasActuales;
+      const monto = Number(reto.monto);
+      const marcadasIniciales = Number(reto.marcadas);
+      const totalVeces = Number(reto.total_veces);
+      let marcadasActuales = marcadasIniciales;
 
-      total += marcadasActuales * Number(reto.monto);
+      const restantesIniciales = totalVeces - marcadasIniciales;
 
+      total += marcadasIniciales * monto;
+
+      /* =========================
+         GRUPO
+         ========================= */
       const grupo = document.createElement("div");
       grupo.className = "grupo";
-if (marcadasActuales === reto.total_veces && reto.total_veces > 0) {
-  grupo.classList.add("completado");
-}
 
-      /* 🔥 BLINDAJE REAL */
-      const estaCompletado = marcadasActuales >= totalVeces && totalVeces > 0;
+      const estaCompletado = marcadasIniciales >= totalVeces && totalVeces > 0;
 
       if (estaCompletado) {
         grupo.classList.add("completado");
       }
 
+      /* =========================
+         HEADER
+         ========================= */
       const header = document.createElement("div");
       header.className = "grupo-header";
-      header.innerHTML = `
-        <span>$${reto.monto}</span>
-        <span id="rest-${reto.monto}">
-          ${estaCompletado
-            ? "COMPLETADO 💚"
-            : `Restantes: ${restantes} de ${totalVeces} ▼`}
-        </span>
-      `;
 
+      const textoEstado = document.createElement("span");
+      textoEstado.textContent = estaCompletado
+        ? "COMPLETADO 💚"
+        : `Restantes: ${restantesIniciales} de ${totalVeces} ▼`;
+
+      header.innerHTML = `<span>$${monto}</span>`;
+      header.appendChild(textoEstado);
+
+      /* =========================
+         CHECKS
+         ========================= */
       const checks = document.createElement("div");
       checks.className = "checks";
-      checks.dataset.monto = reto.monto;
+      checks.dataset.monto = monto;
 
       header.onclick = () => {
         checks.style.display =
@@ -60,37 +74,41 @@ if (marcadasActuales === reto.total_veces && reto.total_veces > 0) {
       for (let i = 0; i < totalVeces; i++) {
         const check = document.createElement("input");
         check.type = "checkbox";
-        check.checked = i < marcadasActuales;
+        check.checked = i < marcadasIniciales;
 
         check.onchange = () => {
 
           marcadasActuales =
             [...checks.children].filter(c => c.checked).length;
 
-          restantes = totalVeces - marcadasActuales;
+          const restantes = totalVeces - marcadasActuales;
 
+          /* =========================
+             TOTAL GLOBAL
+             ========================= */
           total = 0;
           document.querySelectorAll(".checks").forEach(grp => {
-            const monto = Number(grp.dataset.monto);
+            const montoGrp = Number(grp.dataset.monto);
             const count = [...grp.children].filter(c => c.checked).length;
-            total += monto * count;
+            total += montoGrp * count;
           });
 
           totalSpan.textContent = `$${total.toLocaleString()}`;
 
-          const restSpan = document.getElementById(`rest-${reto.monto}`);
-
-          if (marcadasActuales >= totalVeces) {
+          /* =========================
+             COMPLETADO / NO
+             ========================= */
+          if (marcadasActuales >= totalVeces && totalVeces > 0) {
             grupo.classList.add("completado");
-            restSpan.textContent = "COMPLETADO 💚";
+            textoEstado.textContent = "COMPLETADO 💚";
 
-            folioSpan.textContent = "";
             cuponOverlay.style.display = "flex";
+            folioSpan.textContent = "";
 
             fetch("guardar_cupon.php", {
               method: "POST",
               headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: `monto=${reto.monto}`
+              body: `monto=${monto}`
             })
               .then(r => r.json())
               .then(d => {
@@ -101,11 +119,11 @@ if (marcadasActuales === reto.total_veces && reto.total_veces > 0) {
 
           } else {
             grupo.classList.remove("completado");
-            restSpan.textContent =
+            textoEstado.textContent =
               `Restantes: ${restantes} de ${totalVeces} ▼`;
           }
 
-          guardar(reto.monto, marcadasActuales);
+          guardar(monto, marcadasActuales);
         };
 
         checks.appendChild(check);
@@ -119,6 +137,9 @@ if (marcadasActuales === reto.total_veces && reto.total_veces > 0) {
     totalSpan.textContent = `$${total.toLocaleString()}`;
   });
 
+/* =========================
+   GUARDAR BD
+   ========================= */
 function guardar(monto, marcadas) {
   const datos = new FormData();
   datos.append("monto", monto);
