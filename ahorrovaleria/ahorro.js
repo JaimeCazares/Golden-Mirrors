@@ -6,6 +6,13 @@ const cerrarCupon = document.getElementById("cerrarCupon");
 let total = 0;
 
 /* =========================
+   FORZAR CUPÓN OCULTO AL CARGAR
+   ========================= */
+if (cuponOverlay) {
+  cuponOverlay.style.display = "none";
+}
+
+/* =========================
    CERRAR CUPÓN
    ========================= */
 if (cerrarCupon) {
@@ -22,13 +29,14 @@ fetch("obtener_ahorro.php")
   .then(retos => {
 
     retos.forEach(reto => {
-      let restantes = reto.total_veces - reto.marcadas;
-      total += reto.marcadas * reto.monto;
+
+      let marcadasActuales = reto.marcadas;
+      let restantes = reto.total_veces - marcadasActuales;
+      total += marcadasActuales * reto.monto;
 
       const grupo = document.createElement("div");
       grupo.className = "grupo";
 
-      // estado inicial
       if (restantes === 0) {
         grupo.classList.add("completado");
       }
@@ -57,30 +65,35 @@ fetch("obtener_ahorro.php")
         const check = document.createElement("input");
         check.type = "checkbox";
 
-        if (i < reto.marcadas) check.checked = true;
+        if (i < marcadasActuales) check.checked = true;
 
         check.onchange = () => {
-          const marcadas = [...checks.children].filter(c => c.checked).length;
-          restantes = reto.total_veces - marcadas;
+
+          const marcadasAntes = marcadasActuales;
+          marcadasActuales =
+            [...checks.children].filter(c => c.checked).length;
+
+          restantes = reto.total_veces - marcadasActuales;
 
           /* ===== recalcular total ===== */
           total = 0;
           document.querySelectorAll(".checks").forEach(grp => {
             const monto = grp.dataset.monto;
-            const count = [...grp.children].filter(c => c.checked).length;
+            const count =
+              [...grp.children].filter(c => c.checked).length;
             total += monto * count;
           });
 
           totalSpan.textContent = `$${total.toLocaleString()}`;
 
-          const restSpan = document.getElementById(`rest-${reto.monto}`);
-          const estabaCompleto = grupo.classList.contains("completado");
+          const restSpan =
+            document.getElementById(`rest-${reto.monto}`);
 
-          /* ===== COMPLETADO (TRANSICIÓN REAL) ===== */
-          if (restantes === 0 && !estabaCompleto) {
+          /* ===== COMPLETADO ===== */
+          if (marcadasAntes < reto.total_veces &&
+              marcadasActuales === reto.total_veces) {
+
             grupo.classList.add("completado");
-
-            // refuerzo visual (móvil)
             grupo.style.backgroundColor = "#e6f8ec";
             grupo.style.border = "2px solid #6fcf97";
             grupo.style.boxShadow =
@@ -88,18 +101,16 @@ fetch("obtener_ahorro.php")
 
             restSpan.textContent = "COMPLETADO 💚";
 
-            /* ===== CUPÓN (solo una vez por monto) ===== */
+            /* ===== CUPÓN (solo una vez) ===== */
             const key = `cupon-${reto.monto}`;
             if (!localStorage.getItem(key)) {
-              if (cuponOverlay) {
-                cuponOverlay.style.display = "flex";
-              }
+              cuponOverlay.style.display = "flex";
               localStorage.setItem(key, "mostrado");
             }
 
-          } else if (restantes !== 0) {
-            grupo.classList.remove("completado");
+          } else if (marcadasActuales < reto.total_veces) {
 
+            grupo.classList.remove("completado");
             grupo.style.backgroundColor = "";
             grupo.style.border = "";
             grupo.style.boxShadow = "";
@@ -108,7 +119,7 @@ fetch("obtener_ahorro.php")
               `Restantes: ${restantes} de ${reto.total_veces} ▼`;
           }
 
-          guardar(reto.monto, marcadas);
+          guardar(reto.monto, marcadasActuales);
         };
 
         checks.appendChild(check);
