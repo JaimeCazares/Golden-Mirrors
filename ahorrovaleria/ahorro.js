@@ -19,7 +19,7 @@ fetch("obtener_ahorro.php")
       header.innerHTML = `
         <span>$${reto.monto}</span>
         <span id="rest-${reto.monto}">
-          Restantes: ${restantes} ▼
+          Restantes: ${restantes} de ${reto.total_veces} ▼
         </span>
       `;
 
@@ -50,7 +50,7 @@ fetch("obtener_ahorro.php")
 
           totalSpan.textContent = `$${total.toLocaleString()}`;
           document.getElementById(`rest-${reto.monto}`).textContent =
-            `Restantes: ${restantes} ▼`;
+            `Restantes: ${restantes} de ${reto.total_veces} ▼`;
 
           guardar(reto.monto, marcadas);
         };
