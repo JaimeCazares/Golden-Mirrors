@@ -1,11 +1,10 @@
 <?php
-ini_set('session.cookie_path', '/');
-ini_set('session.cookie_secure', 1);
-ini_set('session.cookie_samesite', 'None');
-ini_set('session.use_only_cookies', 1);
+// 🔐 SESIÓN UNIFICADA
+require_once __DIR__ . '/session_init.php';
 
-session_start();
-
+/* =========================
+   CONEXIÓN SEGÚN ENTORNO
+   ========================= */
 if ($_SERVER['SERVER_NAME'] === 'localhost') {
     // 🔹 XAMPP
     $conexion = new mysqli(
@@ -52,7 +51,6 @@ if ($resultado->num_rows === 1) {
 
     $user = $resultado->fetch_assoc();
 
-    // ⚠️ AÚN USAS TEXTO PLANO (luego lo mejoramos)
     if ($password === $user["password"]) {
 
         // 🔐 GUARDAR SESIÓN

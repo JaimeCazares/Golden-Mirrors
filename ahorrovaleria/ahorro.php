@@ -1,15 +1,11 @@
 <?php
-ini_set('session.cookie_path', '/');
-ini_set('session.cookie_secure', 1);
-ini_set('session.cookie_samesite', 'None');
-ini_set('session.use_only_cookies', 1);
-
-session_start();
+require_once __DIR__ . '/../session_init.php';
 
 if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'novia') {
     header("Location: ../login.html");
     exit;
 }
+
 
 ?>
 <!DOCTYPE html>
