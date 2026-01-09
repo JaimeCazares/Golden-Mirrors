@@ -1,24 +1,10 @@
 <?php
-/* =========================
-   CONFIGURACIÓN DE SESIÓN
-   (CLAVE PARA HOSTINGER)
-   ========================= */
-
-// Mostrar errores (puedes apagarlo en prod)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// ⚠️ DEBE IR ANTES DE session_start()
 ini_set('session.cookie_path', '/');
-ini_set('session.cookie_samesite', 'Lax');
+ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_samesite', 'None');
 ini_set('session.use_only_cookies', 1);
 
 session_start();
-
-/* =========================
-   CONEXIÓN SEGÚN ENTORNO
-   ========================= */
 
 if ($_SERVER['SERVER_NAME'] === 'localhost') {
     // 🔹 XAMPP

@@ -1,6 +1,7 @@
 <?php
 ini_set('session.cookie_path', '/');
-ini_set('session.cookie_samesite', 'Lax');
+ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_samesite', 'None');
 ini_set('session.use_only_cookies', 1);
 
 session_start();
@@ -10,11 +11,8 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-session_start();
-if (!isset($_SESSION['usuario'])) {
-    http_response_code(403);
-    exit;
-}
+require_once "../conexion.php";
+
 
 $usuario = $_SESSION['usuario'];
 $monto   = $_POST['monto'] ?? 0;
