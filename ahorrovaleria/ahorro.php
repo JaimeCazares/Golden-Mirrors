@@ -32,6 +32,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'novia') {
   <div class="lista" id="listaAhorro"></div>
 </div>
 
-<script src="ahorro.js"></script>
+<script src="/ahorrovaleria/ahorro.js?v=1"></script>
+
 </body>
 </html>
