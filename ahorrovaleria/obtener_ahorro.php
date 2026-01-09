@@ -11,21 +11,51 @@ if (!isset($_SESSION['usuario'])) {
     exit;
 }
 
-require_once "../conexion.php";
+/* =========================
+   CONEXIÓN SEGÚN ENTORNO
+   ========================= */
+if ($_SERVER['SERVER_NAME'] === 'localhost') {
+    $conexion = new mysqli(
+        "localhost",
+        "root",
+        "",
+        "golden",
+        3307
+    );
+} else {
+    $conexion = new mysqli(
+        "localhost",
+        "u717657264_golden",
+        "Jaimecazares7.",
+        "u717657264_golden",
+        3306
+    );
+}
 
+if ($conexion->connect_error) {
+    http_response_code(500);
+    exit;
+}
+
+/* =========================
+   OBTENER AHORRO
+   ========================= */
 $usuario = $_SESSION['usuario'];
 
-/* CONEXIÓN */
-$conexion = new mysqli("localhost", "root", "", "golden", 3307);
-$result = $conexion->query(
+$result = $conexion->prepare(
     "SELECT monto, total_veces, marcadas 
      FROM ahorro 
-     WHERE usuario = '$usuario'"
+     WHERE usuario = ?"
 );
+$result->bind_param("s", $usuario);
+$result->execute();
 
+$res = $result->get_result();
 $data = [];
-while ($row = $result->fetch_assoc()) {
+
+while ($row = $res->fetch_assoc()) {
     $data[] = $row;
 }
 
+header('Content-Type: application/json');
 echo json_encode($data);
