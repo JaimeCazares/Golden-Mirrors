@@ -52,22 +52,31 @@ if ($resultado->num_rows === 1) {
 
     $user = $resultado->fetch_assoc();
 
-    if ($password === $user["password"]) {
+    // NORMALIZAR
+    $usuario = strtolower(trim($usuario));
+    $password = trim($password);
 
-        // 🔐 GUARDAR SESIÓN
-        $_SESSION["usuario"] = $usuario;
+    // 🔐 VALE
+    if ($usuario === 'vale' && $password === 'vale') {
 
-        // 🔑 DEFINIR ROL
-        if ($usuario === 'vale') {
-            $_SESSION["rol"] = 'novia';
-            echo "AHORRO";
-        } else {
-            $_SESSION["rol"] = 'admin';
-            echo "INDEX";
-        }
-    } else {
-        echo "Contraseña incorrecta";
+        $_SESSION["usuario"] = 'vale';
+        $_SESSION["rol"] = 'novia';
+        echo "AHORRO";
+        exit;
     }
+
+    // 🔐 ADMIN
+    if ($usuario === 'admin' && $password === 'abc') {
+
+        $_SESSION["usuario"] = 'admin';
+        $_SESSION["rol"] = 'admin';
+        echo "INDEX";
+        exit;
+    }
+
+    // ❌ Credenciales incorrectas
+    echo "Usuario o contraseña incorrectos";
+    exit;
 } else {
     echo "El usuario no existe";
 }
