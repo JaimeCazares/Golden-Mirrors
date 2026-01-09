@@ -1,62 +1,81 @@
-const retos = [
-  { veces: 6,  monto: 500 },
-  { veces: 12, monto: 200 },
-  { veces: 22, monto: 100 },
-  { veces: 26, monto: 50 },
-  { veces: 28, monto: 20 },
-  { veces: 26, monto: 10 },
-  { veces: 36, monto: 5 },
-  { veces: 42, monto: 2 },
-  { veces: 50, monto: 1 }
-];
-
 const lista = document.getElementById("listaAhorro");
 const totalSpan = document.getElementById("total");
 
 let total = 0;
 
-retos.forEach(reto => {
-  let restantes = reto.veces;
+/* CARGAR DATOS */
+fetch("obtener_ahorro.php")
+  .then(res => res.json())
+  .then(retos => {
 
-  const grupo = document.createElement("div");
-  grupo.className = "grupo";
+    retos.forEach(reto => {
+      let restantes = reto.total_veces - reto.marcadas;
+      total += reto.marcadas * reto.monto;
 
-  const header = document.createElement("div");
-  header.className = "grupo-header";
-  header.innerHTML = `
-    <span>$${reto.monto}</span>
-    <span id="rest-${reto.monto}">Restantes: ${restantes} ▼</span>
-  `;
+      const grupo = document.createElement("div");
+      grupo.className = "grupo";
 
-  const checks = document.createElement("div");
-  checks.className = "checks";
+      const header = document.createElement("div");
+      header.className = "grupo-header";
+      header.innerHTML = `
+        <span>$${reto.monto}</span>
+        <span id="rest-${reto.monto}">
+          Restantes: ${restantes} ▼
+        </span>
+      `;
 
-  header.addEventListener("click", () => {
-    checks.style.display = checks.style.display === "flex" ? "none" : "flex";
-  });
+      const checks = document.createElement("div");
+      checks.className = "checks";
 
-  for (let i = 0; i < reto.veces; i++) {
-    const check = document.createElement("input");
-    check.type = "checkbox";
+      header.onclick = () => {
+        checks.style.display = checks.style.display === "flex" ? "none" : "flex";
+      };
 
-    check.addEventListener("change", () => {
-      if (check.checked) {
-        total += reto.monto;
-        restantes--;
-      } else {
-        total -= reto.monto;
-        restantes++;
+      for (let i = 0; i < reto.total_veces; i++) {
+        const check = document.createElement("input");
+        check.type = "checkbox";
+
+        if (i < reto.marcadas) check.checked = true;
+
+        check.onchange = () => {
+          let marcadas = [...checks.children].filter(c => c.checked).length;
+          restantes = reto.total_veces - marcadas;
+
+          total = 0;
+          document.querySelectorAll(".checks").forEach(grp => {
+            const monto = grp.dataset.monto;
+            const count = [...grp.children].filter(c => c.checked).length;
+            total += monto * count;
+          });
+
+          totalSpan.textContent = `$${total.toLocaleString()}`;
+          document.getElementById(`rest-${reto.monto}`).textContent =
+            `Restantes: ${restantes} ▼`;
+
+          guardar(reto.monto, marcadas);
+        };
+
+        checks.appendChild(check);
       }
 
-      totalSpan.textContent = `$${total.toLocaleString()}`;
-      document.getElementById(`rest-${reto.monto}`).textContent =
-        `Restantes: ${restantes} ▼`;
+      checks.dataset.monto = reto.monto;
+
+      grupo.appendChild(header);
+      grupo.appendChild(checks);
+      lista.appendChild(grupo);
     });
 
-    checks.appendChild(check);
-  }
+    totalSpan.textContent = `$${total.toLocaleString()}`;
+  });
 
-  grupo.appendChild(header);
-  grupo.appendChild(checks);
-  lista.appendChild(grupo);
-});
+/* GUARDAR EN BD */
+function guardar(monto, marcadas) {
+  const datos = new FormData();
+  datos.append("monto", monto);
+  datos.append("marcadas", marcadas);
+
+  fetch("guardar_ahorro.php", {
+    method: "POST",
+    body: datos
+  });
+}
