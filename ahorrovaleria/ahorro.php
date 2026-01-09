@@ -38,6 +38,18 @@ if ($_SESSION['rol'] !== 'novia') {
     <div class="lista" id="listaAhorro"></div>
   </div>
 
+  <div id="cuponOverlay" class="cupon-overlay">
+    <div class="cupon">
+      <h2>🎟️ CUPÓN</h2>
+      <p>
+        Cupón válido para coger 😈❤️<br><br>
+        <strong>Duración:</strong><br>
+        Toda la vida, pase lo que pase 🌚🔥
+      </p>
+      <button id="cerrarCupon">Cerrar 💕</button>
+    </div>
+  </div>
+
   <script src="/ahorrovaleria/ahorro.js?v=3"></script>
 </body>
 

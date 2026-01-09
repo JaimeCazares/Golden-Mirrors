@@ -1,8 +1,22 @@
 const lista = document.getElementById("listaAhorro");
 const totalSpan = document.getElementById("total");
+const cuponOverlay = document.getElementById("cuponOverlay");
+const cerrarCupon = document.getElementById("cerrarCupon");
 
 let total = 0;
 
+/* =========================
+   CERRAR CUPÓN
+   ========================= */
+if (cerrarCupon) {
+  cerrarCupon.onclick = () => {
+    cuponOverlay.style.display = "none";
+  };
+}
+
+/* =========================
+   CARGAR AHORROS
+   ========================= */
 fetch("obtener_ahorro.php")
   .then(res => res.json())
   .then(retos => {
@@ -23,8 +37,8 @@ fetch("obtener_ahorro.php")
       header.innerHTML = `
         <span>$${reto.monto}</span>
         <span id="rest-${reto.monto}">
-          ${restantes === 0 
-            ? "COMPLETADO 💚" 
+          ${restantes === 0
+            ? "COMPLETADO 💚"
             : `Restantes: ${restantes} de ${reto.total_veces} ▼`}
         </span>
       `;
@@ -34,7 +48,8 @@ fetch("obtener_ahorro.php")
       checks.dataset.monto = reto.monto;
 
       header.onclick = () => {
-        checks.style.display = checks.style.display === "flex" ? "none" : "flex";
+        checks.style.display =
+          checks.style.display === "flex" ? "none" : "flex";
       };
 
       for (let i = 0; i < reto.total_veces; i++) {
@@ -47,6 +62,7 @@ fetch("obtener_ahorro.php")
           const marcadas = [...checks.children].filter(c => c.checked).length;
           restantes = reto.total_veces - marcadas;
 
+          /* ===== recalcular total ===== */
           total = 0;
           document.querySelectorAll(".checks").forEach(grp => {
             const monto = grp.dataset.monto;
@@ -58,27 +74,37 @@ fetch("obtener_ahorro.php")
 
           const restSpan = document.getElementById(`rest-${reto.monto}`);
 
+          /* ===== COMPLETADO ===== */
           if (restantes === 0) {
-  grupo.classList.add("completado");
+            grupo.classList.add("completado");
 
-  // 🔥 FORZAR ESTILO EN CEL
-  grupo.style.backgroundColor = "#e6f8ec";
-  grupo.style.border = "2px solid #6fcf97";
-  grupo.style.boxShadow = "0 6px 14px rgba(47, 143, 91, 0.25)";
+            // refuerzo visual (móvil)
+            grupo.style.backgroundColor = "#e6f8ec";
+            grupo.style.border = "2px solid #6fcf97";
+            grupo.style.boxShadow =
+              "0 6px 14px rgba(47, 143, 91, 0.25)";
 
-  restSpan.textContent = "COMPLETADO 💚";
-} else {
-  grupo.classList.remove("completado");
+            restSpan.textContent = "COMPLETADO 💚";
 
-  // 🔄 quitar estilo forzado
-  grupo.style.backgroundColor = "";
-  grupo.style.border = "";
-  grupo.style.boxShadow = "";
+            /* ===== CUPÓN (solo una vez por monto) ===== */
+            const key = `cupon-${reto.monto}`;
+            if (!localStorage.getItem(key)) {
+              if (cuponOverlay) {
+                cuponOverlay.style.display = "flex";
+              }
+              localStorage.setItem(key, "mostrado");
+            }
 
-  restSpan.textContent =
-    `Restantes: ${restantes} de ${reto.total_veces} ▼`;
-}
+          } else {
+            grupo.classList.remove("completado");
 
+            grupo.style.backgroundColor = "";
+            grupo.style.border = "";
+            grupo.style.boxShadow = "";
+
+            restSpan.textContent =
+              `Restantes: ${restantes} de ${reto.total_veces} ▼`;
+          }
 
           guardar(reto.monto, marcadas);
         };
@@ -94,6 +120,9 @@ fetch("obtener_ahorro.php")
     totalSpan.textContent = `$${total.toLocaleString()}`;
   });
 
+/* =========================
+   GUARDAR EN BD
+   ========================= */
 function guardar(monto, marcadas) {
   const datos = new FormData();
   datos.append("monto", monto);

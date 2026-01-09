@@ -176,3 +176,57 @@ p {
     background-color: #e6f8ec !important;
   }
 }
+/* =========================
+   CUPÓN
+   ========================= */
+.cupon-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.cupon {
+  background: linear-gradient(135deg, #ffe4f1, #fbc2eb);
+  border-radius: 18px;
+  padding: 22px;
+  max-width: 320px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  animation: aparecer 0.4s ease;
+}
+
+.cupon h2 {
+  margin-top: 0;
+  color: #c94f7c;
+}
+
+.cupon p {
+  font-size: 1rem;
+  margin: 12px 0;
+}
+
+.cupon button {
+  border: none;
+  background: #ff69b4;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+@keyframes aparecer {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
