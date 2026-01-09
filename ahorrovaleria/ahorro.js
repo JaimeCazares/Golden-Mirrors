@@ -26,6 +26,9 @@ fetch("obtener_ahorro.php")
 
       const grupo = document.createElement("div");
       grupo.className = "grupo";
+if (marcadasActuales === reto.total_veces && reto.total_veces > 0) {
+  grupo.classList.add("completado");
+}
 
       /* 🔥 BLINDAJE REAL */
       const estaCompletado = marcadasActuales >= totalVeces && totalVeces > 0;
