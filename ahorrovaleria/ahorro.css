@@ -87,7 +87,7 @@ p {
 /* =========================
    TARJETA
    ========================= */
-.grupo {
+.grupo:not(.completado) {
   background: #fdf1f7;
   border-radius: 14px;
   padding: 10px;
