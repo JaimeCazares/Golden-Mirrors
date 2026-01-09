@@ -59,13 +59,26 @@ fetch("obtener_ahorro.php")
           const restSpan = document.getElementById(`rest-${reto.monto}`);
 
           if (restantes === 0) {
-            grupo.classList.add("completado");
-            restSpan.textContent = "COMPLETADO 💚";
-          } else {
-            grupo.classList.remove("completado");
-            restSpan.textContent =
-              `Restantes: ${restantes} de ${reto.total_veces} ▼`;
-          }
+  grupo.classList.add("completado");
+
+  // 🔥 FORZAR ESTILO EN CEL
+  grupo.style.backgroundColor = "#e6f8ec";
+  grupo.style.border = "2px solid #6fcf97";
+  grupo.style.boxShadow = "0 6px 14px rgba(47, 143, 91, 0.25)";
+
+  restSpan.textContent = "COMPLETADO 💚";
+} else {
+  grupo.classList.remove("completado");
+
+  // 🔄 quitar estilo forzado
+  grupo.style.backgroundColor = "";
+  grupo.style.border = "";
+  grupo.style.boxShadow = "";
+
+  restSpan.textContent =
+    `Restantes: ${restantes} de ${reto.total_veces} ▼`;
+}
+
 
           guardar(reto.monto, marcadas);
         };
