@@ -180,14 +180,15 @@ p {
    CUPÓN
    ========================= */
 .cupon-overlay {
+  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: none;
+  background: rgba(0,0,0,0.6);
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 9999;
 }
+
 
 .cupon {
   background: linear-gradient(135deg, #ffe4f1, #fbc2eb);

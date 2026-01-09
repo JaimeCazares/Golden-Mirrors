@@ -38,7 +38,7 @@ if ($_SESSION['rol'] !== 'novia') {
     <div class="lista" id="listaAhorro"></div>
   </div>
 
-  <div id="cuponOverlay" class="cupon-overlay">
+  <<div id="cuponOverlay" class="cupon-overlay" style="display:none;">
     <div class="cupon">
       <h2>🎟️ CUPÓN</h2>
       <p>
@@ -48,9 +48,10 @@ if ($_SESSION['rol'] !== 'novia') {
       </p>
       <button id="cerrarCupon">Cerrar 💕</button>
     </div>
-  </div>
+    </div>
 
-  <script src="/ahorrovaleria/ahorro.js?v=3"></script>
+
+    <script src="/ahorrovaleria/ahorro.js?v=3"></script>
 </body>
 
 </html>
