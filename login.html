@@ -32,23 +32,21 @@ function login() {
 
         if (data === "INDEX") {
             window.location.href = "index.html";
-        } 
-        else if (data === "AHORRO") {
+
+        } else if (data === "AHORRO") {
             window.location.href = "ahorrovaleria/ahorro.php";
-        } 
-        else {
-            document.getElementById("respuesta").innerText = data;
+
+        } else {
+            document.getElementById("respuesta").innerHTML = data;
         }
     })
-    .catch(err => {
-        document.getElementById("respuesta").innerText = "Error de conexión";
-        console.error(err);
+    .catch(() => {
+        document.getElementById("respuesta").innerHTML = "❌ Error de conexión";
     });
 }
 </script>
 
 <script>
-// ENTER en usuario → saltar a contraseña
 document.getElementById("usuario").addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -56,7 +54,6 @@ document.getElementById("usuario").addEventListener("keypress", function(event) 
     }
 });
 
-// ENTER en contraseña → hacer login
 document.getElementById("password").addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
         event.preventDefault();

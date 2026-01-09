@@ -10,7 +10,6 @@ session_start();
    ========================= */
 
 if ($_SERVER['SERVER_NAME'] === 'localhost') {
-    // 🔹 XAMPP (LOCAL)
     $conexion = new mysqli(
         "localhost",
         "root",
@@ -19,7 +18,6 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
         3307
     );
 } else {
-    // 🔹 HOSTINGER (PRODUCCIÓN)
     $conexion = new mysqli(
         "localhost",
         "u717657264_golden",
@@ -54,11 +52,13 @@ if ($resultado->num_rows === 1) {
 
         $_SESSION["usuario"] = $usuario;
 
-        // 🔹 REDIRECCIONES
+        // 🔑 DEFINIR ROL CORRECTAMENTE
         if ($usuario === 'vale') {
-            echo "AHORRO"; // novia
+            $_SESSION["rol"] = 'novia';
+            echo "AHORRO";
         } else {
-            echo "INDEX"; // tú
+            $_SESSION["rol"] = 'admin';
+            echo "INDEX";
         }
 
     } else {

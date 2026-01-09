@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden; /* ❌ SIN SCROLL */
+  background: linear-gradient(135deg, #ffd6e8, #e0c3fc);
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contenedor {
+  background: #fff;
+  border-radius: 20px;
+  padding: 25px;
+  width: 90vw;
+  max-width: 900px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+h1 {
+  text-align: center;
+  color: #c94f7c;
+  margin-bottom: 10px;
+}
+
+.total {
+  background: #ffe4f1;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.lista {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 👉 usa el ancho */
+  gap: 12px;
+}
+.grupo {
+  background: #fdf1f7;
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.grupo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.grupo-header span {
+  color: #c94f7c;
+}
+
+.checks {
+  margin-top: 10px;
+  display: none;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.checks input {
+  transform: scale(1.3);
+}

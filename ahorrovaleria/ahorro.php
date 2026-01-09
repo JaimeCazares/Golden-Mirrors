@@ -1,7 +1,8 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'novia') {
-    header("Location: login.html");
+    header("Location: ../login.html");
     exit;
 }
 ?>
