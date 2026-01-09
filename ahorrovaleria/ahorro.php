@@ -52,7 +52,8 @@ if ($_SESSION['rol'] !== 'novia') {
   </div>
 
 
-  <script src="./ahorro.js" defer></script>
+  <script src="./ahorro.js?v=4" defer></script>
+
 
 </body>
 
