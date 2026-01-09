@@ -28,6 +28,7 @@ fetch("obtener_ahorro.php")
       const grupo = document.createElement("div");
       grupo.className = "grupo";
 
+      // estado inicial
       if (restantes === 0) {
         grupo.classList.add("completado");
       }
@@ -73,9 +74,10 @@ fetch("obtener_ahorro.php")
           totalSpan.textContent = `$${total.toLocaleString()}`;
 
           const restSpan = document.getElementById(`rest-${reto.monto}`);
+          const estabaCompleto = grupo.classList.contains("completado");
 
-          /* ===== COMPLETADO ===== */
-          if (restantes === 0) {
+          /* ===== COMPLETADO (TRANSICIÓN REAL) ===== */
+          if (restantes === 0 && !estabaCompleto) {
             grupo.classList.add("completado");
 
             // refuerzo visual (móvil)
@@ -95,7 +97,7 @@ fetch("obtener_ahorro.php")
               localStorage.setItem(key, "mostrado");
             }
 
-          } else {
+          } else if (restantes !== 0) {
             grupo.classList.remove("completado");
 
             grupo.style.backgroundColor = "";
