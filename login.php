@@ -1,7 +1,18 @@
 <?php
+/* =========================
+   CONFIGURACIÓN DE SESIÓN
+   (CLAVE PARA HOSTINGER)
+   ========================= */
+
+// Mostrar errores (puedes apagarlo en prod)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// ⚠️ DEBE IR ANTES DE session_start()
+ini_set('session.cookie_path', '/');
+ini_set('session.cookie_samesite', 'Lax');
+ini_set('session.use_only_cookies', 1);
 
 session_start();
 
@@ -10,6 +21,7 @@ session_start();
    ========================= */
 
 if ($_SERVER['SERVER_NAME'] === 'localhost') {
+    // 🔹 XAMPP
     $conexion = new mysqli(
         "localhost",
         "root",
@@ -18,6 +30,7 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
         3307
     );
 } else {
+    // 🔹 HOSTINGER
     $conexion = new mysqli(
         "localhost",
         "u717657264_golden",
@@ -28,7 +41,7 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
 }
 
 if ($conexion->connect_error) {
-    die("Error conexión DB: " . $conexion->connect_error);
+    die("Error conexión DB");
 }
 
 /* =========================
@@ -37,6 +50,11 @@ if ($conexion->connect_error) {
 
 $usuario  = $_POST["usuario"] ?? "";
 $password = $_POST["password"] ?? "";
+
+if ($usuario === "" || $password === "") {
+    echo "Datos incompletos";
+    exit;
+}
 
 $sql = "SELECT * FROM usuarios WHERE usuario = ? LIMIT 1";
 $stmt = $conexion->prepare($sql);
@@ -48,11 +66,13 @@ if ($resultado->num_rows === 1) {
 
     $user = $resultado->fetch_assoc();
 
+    // ⚠️ AÚN USAS TEXTO PLANO (luego lo mejoramos)
     if ($password === $user["password"]) {
 
+        // 🔐 GUARDAR SESIÓN
         $_SESSION["usuario"] = $usuario;
 
-        // 🔑 DEFINIR ROL CORRECTAMENTE
+        // 🔑 DEFINIR ROL
         if ($usuario === 'vale') {
             $_SESSION["rol"] = 'novia';
             echo "AHORRO";
