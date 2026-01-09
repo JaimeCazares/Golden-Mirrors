@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/../session_init.php';
 
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'novia') {
+if ($_SESSION['rol'] !== 'novia') {
     header("Location: ../login.html");
     exit;
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -14,15 +12,16 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'novia') {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mi ahorro 💖</title>
-<link rel="stylesheet" href="ahorro.css?v=2">
+<link rel="stylesheet" href="ahorro.css?v=3">
 </head>
 <body>
 
 <div class="contenedor">
   <h1>
-  <span class="titulo-texto">Reto de Ahorro</span>
-  <span class="titulo-emoji">🌸</span>
-</h1>
+    <span class="titulo-texto">Reto de Ahorro</span>
+    <span class="titulo-emoji">🌸</span>
+  </h1>
+
   <p>Vamos por los <strong>$10,000</strong> 💕</p>
 
   <div class="total">
@@ -32,7 +31,6 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'novia') {
   <div class="lista" id="listaAhorro"></div>
 </div>
 
-<script src="/ahorrovaleria/ahorro.js?v=1"></script>
-
+<script src="/ahorrovaleria/ahorro.js?v=2"></script>
 </body>
 </html>

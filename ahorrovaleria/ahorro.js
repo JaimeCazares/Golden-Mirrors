@@ -1,11 +1,8 @@
-alert("ahorro.js cargado");
-
 const lista = document.getElementById("listaAhorro");
 const totalSpan = document.getElementById("total");
 
 let total = 0;
 
-/* CARGAR DATOS */
 fetch("obtener_ahorro.php")
   .then(res => res.json())
   .then(retos => {
@@ -28,6 +25,7 @@ fetch("obtener_ahorro.php")
 
       const checks = document.createElement("div");
       checks.className = "checks";
+      checks.dataset.monto = reto.monto;
 
       header.onclick = () => {
         checks.style.display = checks.style.display === "flex" ? "none" : "flex";
@@ -40,7 +38,7 @@ fetch("obtener_ahorro.php")
         if (i < reto.marcadas) check.checked = true;
 
         check.onchange = () => {
-          let marcadas = [...checks.children].filter(c => c.checked).length;
+          const marcadas = [...checks.children].filter(c => c.checked).length;
           restantes = reto.total_veces - marcadas;
 
           total = 0;
@@ -60,8 +58,6 @@ fetch("obtener_ahorro.php")
         checks.appendChild(check);
       }
 
-      checks.dataset.monto = reto.monto;
-
       grupo.appendChild(header);
       grupo.appendChild(checks);
       lista.appendChild(grupo);
@@ -70,7 +66,6 @@ fetch("obtener_ahorro.php")
     totalSpan.textContent = `$${total.toLocaleString()}`;
   });
 
-/* GUARDAR EN BD */
 function guardar(monto, marcadas) {
   const datos = new FormData();
   datos.append("monto", monto);
