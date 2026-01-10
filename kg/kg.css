@@ -129,3 +129,42 @@
 .close, .close-visor { cursor: pointer; color: white; float: right; font-size: 20px; }
 .img-zoom-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 10100; display: flex; justify-content: center; align-items: center; }
 .img-zoom-content { max-width: 95%; max-height: 95%; border-radius: 10px; }
+
+/* --- RESPONSIVE PARA PESOS --- */
+@media (max-width: 600px) {
+  .pesos-container {
+    /* Mover al fondo de la pantalla */
+    top: auto; 
+    bottom: 10px; 
+    width: 95%;
+    max-width: none;
+    
+    /* Cambiar distribución para que quepa */
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center;
+    gap: 5px;
+    padding: 8px;
+  }
+
+  #listaPesos {
+    flex-wrap: wrap; /* Permitir que los pesos bajen de línea */
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  #listaPesos li {
+    font-size: 11px;
+    padding: 4px 8px;
+    flex-grow: 1; /* Que se estiren para llenar huecos */
+    text-align: center;
+  }
+
+  #pesoSeleccionado {
+    width: 100%; /* Ocupa todo el ancho abajo */
+    margin-top: 5px;
+    padding: 4px;
+  }
+}

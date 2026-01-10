@@ -110,3 +110,47 @@
   background: linear-gradient(145deg, #00b341, #006d2a);
   box-shadow: 0 0 8px rgba(0, 255, 100, 0.6);
 }
+
+/* --- RESPONSIVE PARA DEUDAS --- */
+@media (max-width: 600px) {
+  .deudas-container {
+    width: 90%; /* Ocupa casi todo el ancho */
+    max-width: none;
+    left: 5%; /* Centrado horizontalmente */
+    top: 5px; /* Más pegado arriba */
+    grid-template-columns: 1fr auto; /* Solo dos columnas: lista y total */
+    font-size: 11px;
+    padding: 8px;
+    z-index: 9999;
+  }
+
+  /* Ajustar la lista interna */
+  #listaDeudas {
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas forzadas pero pequeñas */
+    grid-column: 1; /* Ocupa la primera columna del contenedor */
+  }
+
+  #listaDeudas li {
+    font-size: 10px;
+    padding: 2px 4px;
+    white-space: nowrap; /* Evita que el texto se rompa */
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* El total se va abajo o al lado, más pequeño */
+  #totalDeuda {
+    grid-column: 2; /* Segunda columna del contenedor */
+    grid-row: 1;
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  /* Mover el botón editar para que no estorbe */
+  #editarBtn {
+    position: absolute; /* Ya no fixed, sino relativo al contenedor */
+    top: -5px;
+    right: -10px;
+    left: auto; /* Anular el left fijo */
+  }
+}
