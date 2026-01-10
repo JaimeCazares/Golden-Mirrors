@@ -179,6 +179,9 @@ function initKg() {
     btnHistorial.style.top  = ref.bottom + window.scrollY + 6 + "px";
   }
 
+  // Recalcular la posición del botón cuando se cambia el tamaño de la ventana o se hace zoom
+  window.addEventListener("resize", fixBtnPos);
+
   btnHistorial.onclick = () => { modalKg.style.display = "flex"; btnHistorial.style.display = "none"; cargarHistorialKg(); };
   cerrarKgModal.onclick = () => { modalKg.style.display = "none"; btnHistorial.style.display = "block"; fixBtnPos(); };
 
