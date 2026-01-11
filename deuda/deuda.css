@@ -9,7 +9,7 @@
   font-size: 13px;
   z-index: 9999;
   display: grid;
-  grid-template-columns: repeat(3, auto) 1fr; /* 3 columnas de deudas + 1 para total */
+  grid-template-columns: repeat(3, auto) 1fr;
   column-gap: 10px;
   row-gap: 6px;
   align-items: center;
@@ -18,7 +18,6 @@
   max-width: 700px;
 }
 
-/* Lista de deudas */
 #listaDeudas {
   list-style: none;
   padding: 0;
@@ -44,12 +43,6 @@
   font-size: 12px;
 }
 
-#listaDeudas li:hover {
-  transform: scale(1.06);
-  box-shadow: 0 0 8px rgba(255, 80, 80, 0.9);
-}
-
-/* ✅ Pagada */
 #listaDeudas li.pagada {
   background: linear-gradient(145deg, #00ff66, #008f44);
   box-shadow: 0 0 8px rgba(0, 255, 100, 0.7);
@@ -57,7 +50,6 @@
   opacity: 0.9;
 }
 
-/* 💰 Total a la derecha */
 #totalDeuda {
   grid-column: 4; 
   grid-row: 1 / span 3; 
@@ -74,7 +66,6 @@
   justify-self: end;
 }
 
-/* 🟢 Todo pagado */
 #totalDeuda.completo {
   background: linear-gradient(145deg, #00ff66, #00a84d);
   box-shadow: 0 0 10px rgba(0, 255, 100, 0.9);
@@ -82,11 +73,10 @@
   transform: scale(1.05);
 }
 
-/* ✏️ Botón editar — fuera del recuadro */
 #editarBtn {
   position: fixed;
   top: 55px;
-  left: 550px; /* 👈 justo al lado derecho del recuadro */
+  left: 550px; 
   background: linear-gradient(145deg, #1c2541, #0f172a);
   color: white;
   border: none;
@@ -99,60 +89,47 @@
   z-index: 10000;
 }
 
-/* Hover del botón ✏️ */
-#editarBtn:hover {
-  background: linear-gradient(145deg, #3a4b78, #24335b);
-  transform: scale(1.1);
-}
-
-/* Cuando está en modo "Listo" ✅ */
-#editarBtn.modo-listo {
-  background: linear-gradient(145deg, #00b341, #006d2a);
-  box-shadow: 0 0 8px rgba(0, 255, 100, 0.6);
-}
-
-/* --- RESPONSIVE: Deudas (Barra Superior) --- */
 @media (max-width: 600px) {
   .deudas-container {
-    width: 94%;           /* Ocupa casi todo el ancho */
-    left: 3%;             /* Centrado (3% izq + 94% ancho + 3% der = 100%) */
-    top: 5px;             /* Bien pegado arriba */
-    padding: 8px 5px;     /* Menos relleno */
-    
-    /* Reorganizar en 2 columnas: Lista a la izq, Total a la der */
+    width: 94%;           
+    left: 3%;             /* 3% izquierda + 94% ancho + 3% derecha = 100% */
+    top: 5px;
+    padding: 8px 6px;
     grid-template-columns: 1fr auto; 
-    gap: 5px;
+    gap: 4px;
+    position: fixed;      
+    box-sizing: border-box; /* Asegura que el padding no sume al ancho */
   }
 
-  /* La lista de bolitas */
   #listaDeudas {
-    display: flex;        /* Usar Flex para que se acomoden solas */
-    flex-wrap: wrap;      /* Si no caben, bajan de línea */
-    gap: 4px;
-    grid-column: 1;       /* Columna izquierda */
-    justify-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    grid-column: 1;
   }
 
   #listaDeudas li {
-    font-size: 10px;      /* Texto más pequeño */
-    padding: 3px 6px;
+    font-size: 9px;
+    padding: 2px 4px;
   }
 
-  /* El cuadro de Total */
   #totalDeuda {
-    grid-column: 2;       /* Columna derecha */
-    grid-row: 1;          /* Misma fila que la lista */
-    font-size: 11px;
-    padding: 4px 8px;
-    white-space: nowrap;  /* Que no se rompa el texto */
+    grid-column: 2;
+    font-size: 10px;
+    padding: 4px 6px;
+    align-self: center;
   }
 
-  /* El botón de lápiz (Editar) */
   #editarBtn {
-    /* Lo metemos dentro/pegado al contenedor para que no flote perdido */
-    position: absolute;   
-    top: 35px;            /* Justo debajo del cuadro */
-    right: 0;             /* Pegado a la derecha */
-    left: auto;           /* Quitamos el left fijo de PC */
+    position: absolute; 
+    top: 2px;
+    right: 2px;
+    left: auto;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

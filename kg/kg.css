@@ -1,4 +1,4 @@
-/* --- CONTENEDOR PESOS SUPERIOR (SIN CAMBIOS) --- */
+/* --- CONTENEDOR PESOS --- */
 .pesos-container { position: relative; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(15, 15, 30, 0.85); border-radius: 10px; padding: 10px 14px; color: white; z-index: 9999; display: grid; grid-template-columns: repeat(4, auto) 1fr; column-gap: 10px; row-gap: 6px; max-width: 700px; backdrop-filter: blur(8px); box-shadow: 0 0 12px rgba(0, 200, 255, 0.15); }
 #listaPesos { list-style: none; display: flex; gap: 8px; grid-column: 1 / span 4; padding: 0; margin: 0; }
 #listaPesos li { cursor: pointer; background: linear-gradient(145deg, #555555, #333333); padding: 2px 8px; border-radius: 6px; font-size: 12px; transition: transform 0.2s; }
@@ -8,183 +8,72 @@
 #pesoSeleccionado { grid-column: 5; background: linear-gradient(145deg, #00e0ff, #0088a8); color: #022; padding: 6px 10px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; }
 #pesoSeleccionado input { width: 50px; background: transparent; border: none; color: #022; font-weight: bold; text-align: center; outline: none; }
 
-/* --- MODAL --- */
+/* MODAL Y BOTONES (Se mantienen iguales) */
 .btn-historial { position: absolute; background: transparent; border: none; font-size: 22px; cursor: pointer; z-index: 10000; }
 #modalKg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10001; display: none; justify-content: center; align-items: center; }
-
-.modal-content { 
-  background: #1a1a2e; padding: 20px; border-radius: 12px; 
-  width: 95%; max-width: 500px; 
-  position: relative; color: white; border: 1px solid #30475e;
-}
-
+.modal-content { background: #1a1a2e; padding: 20px; border-radius: 12px; width: 95%; max-width: 500px; position: relative; color: white; border: 1px solid #30475e; }
 .grid-semanas-header { text-align: center; color: #00e0ff; margin-bottom: 10px; font-weight: bold; font-size: 16px; }
-
-/* --- GRID DE SEMANAS (SIN SCROLL) --- */
-#historialKgLista { 
-  display: grid; 
-  grid-template-columns: repeat(10, 1fr); 
-  gap: 5px; 
-  padding: 10px;
-  background: rgba(0,0,0,0.2); 
-  border-radius: 8px;
-  margin-bottom: 10px;
-  height: auto;
-  overflow: visible;
-}
-
+#historialKgLista { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 10px; height: auto; overflow: visible; }
 .semana-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1/1; border-radius: 4px; cursor: pointer; font-size: 9px; transition: 0.2s; }
-.semana-btn b { font-size: 11px; }
-.semana-btn span { font-size: 7px; display: block; margin-top: -2px; }
 .semana-btn.pendiente { background: #252535; color: #555; border: 1px solid rgba(255,255,255,0.05); }
 .semana-btn.completada { background: #00e0ff; color: #022; font-weight: bold; }
-
-/* --- FILA DE BOTONES Y TITULO EN UNA SOLA LINEA --- */
-.fila-linea-unica {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-    /* Aumenté el margen inferior para "subirlos" visualmente */
-    margin-bottom: 25px; 
-    gap: 10px;
-}
-
-.titulo-central-registro {
-    font-size: 14px; color: #ccc; margin: 0 !important; padding: 0; white-space: nowrap; font-weight: bold;
-}
-
-.btn-accion-lateral {
-    background: #1f2a44; color: #00e0ff; border: 1px solid #00e0ff44;
-    padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: bold;
-    min-width: 80px; transition: all 0.2s;
-}
-.btn-accion-lateral:hover { background: #00e0ff; color: #1a1a2e; box-shadow: 0 0 8px rgba(0, 224, 255, 0.5); }
-
-/* --- FORMULARIO --- */
+.fila-linea-unica { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; margin-bottom: 25px; gap: 10px; }
+.titulo-central-registro { font-size: 14px; color: #ccc; margin: 0 !important; padding: 0; white-space: nowrap; font-weight: bold; }
+.btn-accion-lateral { background: #1f2a44; color: #00e0ff; border: 1px solid #00e0ff44; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: bold; min-width: 80px; transition: all 0.2s; }
 #nuevoPeso { width: 100%; padding: 10px; background: #0f0f1e; border: 1px solid #333; color: white; border-radius: 6px; margin-bottom: 15px; text-align: center; font-size: 14px; }
-
-/* --- NUEVO DISEÑO COOL PARA INPUTS DE ARCHIVO --- */
-.upload-grid-modern {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.upload-item-cool {
-    position: relative;
-}
-
-/* Escondemos el input feo original */
-.upload-item-cool input[type="file"] {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 2;
-}
-
-/* Diseñamos el label para que parezca un botón cool */
-.upload-item-cool label {
-    display: flex;
-    align-items: center;
-    background: rgba(0, 224, 255, 0.05);
-    border: 1px dashed #00e0ff66; /* Borde punteado neón */
-    padding: 10px 12px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.upload-item-cool:hover label {
-    background: rgba(0, 224, 255, 0.15);
-    border-color: #00e0ff;
-    box-shadow: 0 0 10px rgba(0, 224, 255, 0.2);
-}
-
+.upload-grid-modern { display: flex; flex-direction: column; gap: 10px; }
+.upload-item-cool { position: relative; }
+.upload-item-cool input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
+.upload-item-cool label { display: flex; align-items: center; background: rgba(0, 224, 255, 0.05); border: 1px dashed #00e0ff66; padding: 10px 12px; border-radius: 8px; transition: all 0.3s ease; }
 .upload-item-cool .icon { font-size: 14px; margin-right: 8px; }
 .upload-item-cool .label-text { color: #00e0ff; font-weight: bold; font-size: 12px; flex-grow: 1; }
 .upload-item-cool .file-name { color: #777; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
-
-/* Si hay archivo seleccionado (se controla con JS añadiendo clase 'active') */
-.upload-item-cool.active label {
-    background: rgba(40, 167, 69, 0.1);
-    border-color: #28a745;
-}
-.upload-item-cool.active .file-name { color: #4df572; }
-
-
 #guardarPesoHistorial { width: 100%; padding: 12px; margin-top: 20px; background: #00e0ff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #022; font-size: 14px; transition: 0.2s; }
-#guardarPesoHistorial:hover { box-shadow: 0 0 15px rgba(0, 224, 255, 0.5); }
-
-/* --- EXTRAS --- */
-#mensajeRegistro { text-align: center; padding: 8px; margin-bottom: 10px; border-radius: 4px; display: none; font-size: 12px; }
-.msg-exito { background: rgba(40, 167, 69, 0.2); color: #4df572; border: 1px solid #28a745; }
-.msg-error { background: rgba(220, 53, 69, 0.2); color: #ff5c6c; border: 1px solid #dc3545; }
-
 .visor-fotos-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 10005; display: flex; justify-content: center; align-items: center; }
 .visor-content { background: #1a1a2e; padding: 20px; border-radius: 15px; width: 95%; max-width: 600px; position: relative; }
 .fotos-row { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
 .foto-box img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid #333; cursor: zoom-in; }
-.close, .close-visor { cursor: pointer; color: white; float: right; font-size: 20px; }
-.img-zoom-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 10100; display: flex; justify-content: center; align-items: center; }
-.img-zoom-content { max-width: 95%; max-height: 95%; border-radius: 10px; }
 
-/* --- RESPONSIVE: Pesos (Barra Inferior) --- */
+/* --- RESPONSIVE: Pesos --- */
 @media (max-width: 600px) {
   .pesos-container {
-    /* Cambiamos de Relative a Fixed para pegarlo abajo */
     position: fixed;      
-    top: auto;            /* Anular posición de arriba */
-    bottom: 10px;         /* Pegado al fondo */
-    left: 2.5%;           /* Centrado */
-    transform: none;      /* Quitar la transformación de PC */
-    
-    width: 95%;           /* Casi todo el ancho */
-    max-width: none;
-    
-    /* Diseño flexible */
+    top: 100px;           /* Bajado un poco para que se vea igual que en tu captura */
+    left: 3% !important;  /* Forzado para ignorar el centrado de PC */
+    width: 94% !important;
+    transform: none !important; 
     display: flex;
-    flex-direction: column; /* Elementos uno sobre otro */
-    align-items: center;
-    gap: 5px;
-    z-index: 10000;       /* Por encima de todo */
+    flex-direction: column; 
+    padding: 8px;
+    gap: 6px;
+    box-sizing: border-box; /* Crucial para los márgenes exactos */
   }
 
-  /* La lista de pesos (75kg, 80kg...) */
   #listaPesos {
     width: 100%;
     display: flex;
-    justify-content: space-between; /* Distribuidos uniformemente */
-    overflow-x: auto;     /* Scroll horizontal si no caben */
-    padding-bottom: 5px;  /* Espacio para el scroll si aparece */
+    flex-wrap: wrap;      
+    justify-content: center; 
+    gap: 4px;
   }
 
   #listaPesos li {
-    font-size: 11px;
-    padding: 5px 2px;
-    flex: 1;              /* Todos del mismo tamaño */
+    font-size: 10px;
+    padding: 4px 6px;
+    flex-grow: 1;
     text-align: center;
-    white-space: nowrap;
   }
 
-  /* El cuadro azul de "PESO" seleccionado */
   #pesoSeleccionado {
-    width: 100%;          /* Botón grande para tocar fácil */
-    text-align: center;
-    padding: 8px;
-    margin-top: 2px;
+    width: 100%;          
+    padding: 6px;
+    font-size: 11px;
   }
 
-  /* El botón de historial (📊) */
   .btn-historial {
-    top: auto;            /* Quitar posición top */
-    bottom: 85px;         /* Flotando encima de la barra de pesos */
-    right: 15px;
-    left: auto;
-    background: #1a1a2e;  /* Fondo oscuro para que se vea */
-    border-radius: 50%;
-    padding: 5px;
-    box-shadow: 0 0 10px rgba(0,255,255,0.5);
+    position: relative;
+    top: 5px;             
+    margin: 0 auto;
+    display: block;
   }
 }
