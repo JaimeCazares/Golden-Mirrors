@@ -1,14 +1,74 @@
 /* --- CONTENEDOR PESOS --- */
-.pesos-container { position: relative; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(15, 15, 30, 0.85); border-radius: 10px; padding: 10px 14px; color: white; z-index: 9999; display: grid; grid-template-columns: repeat(4, auto) 1fr; column-gap: 10px; row-gap: 6px; max-width: 700px; backdrop-filter: blur(8px); box-shadow: 0 0 12px rgba(0, 200, 255, 0.15); }
-#listaPesos { list-style: none; display: flex; gap: 8px; grid-column: 1 / span 4; padding: 0; margin: 0; }
+.pesos-container { 
+  position: relative; 
+  top: 10px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  background: rgba(15, 15, 30, 0.85); 
+  border-radius: 10px; 
+  padding: 10px 14px; 
+  color: white; 
+  z-index: 9999; 
+  display: grid; 
+  grid-template-columns: repeat(4, auto) 1fr; 
+  column-gap: 10px; 
+  row-gap: 8px; 
+  max-width: 700px; 
+  backdrop-filter: blur(8px); 
+  box-shadow: 0 0 12px rgba(0, 200, 255, 0.15); 
+}
+
+#listaPesos { 
+  list-style: none; 
+  display: flex; 
+  gap: 8px; 
+  grid-column: 1 / span 5; 
+  padding: 0; 
+  margin: 0; 
+}
+
 #listaPesos li { cursor: pointer; background: linear-gradient(145deg, #555555, #333333); padding: 2px 8px; border-radius: 6px; font-size: 12px; transition: transform 0.2s; }
 #listaPesos li:hover { transform: scale(1.06); }
 #listaPesos li.actual, #listaPesos li.superior { background: linear-gradient(270deg, #6a5cff, #c77dff, #ff8fab, #80ffdb, #6a5cff); background-size: 400% 400%; animation: rainbowMove 6s ease infinite; font-weight: 600; }
+
 @keyframes rainbowMove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-#pesoSeleccionado { grid-column: 5; background: linear-gradient(145deg, #00e0ff, #0088a8); color: #022; padding: 6px 10px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; }
+
+/* --- SECCIÓN IMC --- */
+#imc-info {
+  grid-column: 1 / span 4;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 224, 255, 0.2);
+  padding: 4px;
+  height: 28px;
+  transition: all 0.3s ease;
+}
+#val-imc { font-weight: bold; font-size: 14px; text-shadow: 0 0 8px currentColor; }
+#lbl-imc { font-size: 9px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; color: white !important; }
+
+/* --- BOTÓN AZUL CLARO --- */
+#pesoSeleccionado { 
+  grid-column: 5; 
+  grid-row: 2;
+  background: linear-gradient(145deg, #00e0ff, #0088a8); 
+  color: #022; 
+  padding: 6px 10px; 
+  border-radius: 8px; 
+  font-size: 13px; 
+  font-weight: bold; 
+  cursor: pointer; 
+  text-align: center; 
+  box-shadow: 0 0 10px rgba(0, 224, 255, 0.4);
+}
+
 #pesoSeleccionado input { width: 50px; background: transparent; border: none; color: #022; font-weight: bold; text-align: center; outline: none; }
 
-/* MODAL Y BOTONES (Se mantienen iguales) */
+/* MODAL Y BOTONES */
 .btn-historial { position: absolute; background: transparent; border: none; font-size: 22px; cursor: pointer; z-index: 10000; }
 #modalKg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10001; display: none; justify-content: center; align-items: center; }
 .modal-content { background: #1a1a2e; padding: 20px; border-radius: 12px; width: 95%; max-width: 500px; position: relative; color: white; border: 1px solid #30475e; }
@@ -29,51 +89,12 @@
 .upload-item-cool .label-text { color: #00e0ff; font-weight: bold; font-size: 12px; flex-grow: 1; }
 .upload-item-cool .file-name { color: #777; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
 #guardarPesoHistorial { width: 100%; padding: 12px; margin-top: 20px; background: #00e0ff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #022; font-size: 14px; transition: 0.2s; }
-.visor-fotos-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 10005; display: flex; justify-content: center; align-items: center; }
-.visor-content { background: #1a1a2e; padding: 20px; border-radius: 15px; width: 95%; max-width: 600px; position: relative; }
-.fotos-row { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
-.foto-box img { width: 100%; height: 110px; object-fit: cover; border-radius: 6px; border: 1px solid #333; cursor: zoom-in; }
 
-/* --- RESPONSIVE: Pesos --- */
 @media (max-width: 600px) {
-  .pesos-container {
-    position: fixed;      
-    top: 100px;           /* Bajado un poco para que se vea igual que en tu captura */
-    left: 3% !important;  /* Forzado para ignorar el centrado de PC */
-    width: 94% !important;
-    transform: none !important; 
-    display: flex;
-    flex-direction: column; 
-    padding: 8px;
-    gap: 6px;
-    box-sizing: border-box; /* Crucial para los márgenes exactos */
-  }
-
-  #listaPesos {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;      
-    justify-content: center; 
-    gap: 4px;
-  }
-
-  #listaPesos li {
-    font-size: 10px;
-    padding: 4px 6px;
-    flex-grow: 1;
-    text-align: center;
-  }
-
-  #pesoSeleccionado {
-    width: 100%;          
-    padding: 6px;
-    font-size: 11px;
-  }
-
-  .btn-historial {
-    position: relative;
-    top: 5px;             
-    margin: 0 auto;
-    display: block;
-  }
+  .pesos-container { position: fixed; top: 100px; left: 3% !important; width: 94% !important; transform: none !important; display: flex; flex-direction: column; padding: 8px; gap: 6px; box-sizing: border-box; }
+  #listaPesos { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+  #listaPesos li { font-size: 10px; padding: 4px 6px; flex-grow: 1; text-align: center; }
+  #imc-info { width: 100%; margin: 0; order: 2; }
+  #pesoSeleccionado { width: 100%; padding: 6px; font-size: 11px; order: 3; }
+  .btn-historial { position: relative; top: 5px; margin: 0 auto; display: block; }
 }

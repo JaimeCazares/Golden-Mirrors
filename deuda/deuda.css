@@ -73,17 +73,18 @@
   transform: scale(1.05);
 }
 
+/* BOTÓN EDITAR - Corregido para estar adentro sin agrandar el cuadro */
 #editarBtn {
-  position: fixed;
-  top: 55px;
-  left: 550px; 
+  position: absolute; /* Cambiado de fixed a absolute */
+  bottom: 8px;        /* Posicionado en la esquina inferior derecha */
+  right: 12px;        /* Alineado dentro del contenedor */
   background: linear-gradient(145deg, #1c2541, #0f172a);
   color: white;
   border: none;
   padding: 6px 8px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;    /* Ligeramente más pequeño para PC */
   transition: all 0.25s ease;
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
   z-index: 10000;
@@ -92,13 +93,13 @@
 @media (max-width: 600px) {
   .deudas-container {
     width: 94%;           
-    left: 3%;             /* 3% izquierda + 94% ancho + 3% derecha = 100% */
+    left: 3%;             
     top: 5px;
     padding: 8px 6px;
     grid-template-columns: 1fr auto; 
     gap: 4px;
     position: fixed;      
-    box-sizing: border-box; /* Asegura que el padding no sume al ancho */
+    box-sizing: border-box; 
   }
 
   #listaDeudas {
@@ -122,9 +123,9 @@
 
   #editarBtn {
     position: absolute; 
-    top: 2px;
+    top: 2px;         /* En móvil lo mantenemos donde estaba */
     right: 2px;
-    left: auto;
+    bottom: auto;     /* Reset del valor de PC */
     width: 22px;
     height: 22px;
     font-size: 11px;
