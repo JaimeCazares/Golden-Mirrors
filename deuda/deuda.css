@@ -15,7 +15,7 @@
   align-items: center;
   box-shadow: 0 0 12px rgba(0, 255, 255, 0.1);
   backdrop-filter: blur(8px);
-  max-width: 700px;
+  max-width: 650px; /* Reducido un poco para evitar colisión */
 }
 
 #listaDeudas {
@@ -73,7 +73,6 @@
   transform: scale(1.05);
 }
 
-/* BOTÓN EDITAR - Actualizado con texto y posición interna */
 #editarBtn {
   position: absolute; 
   bottom: 10px;        
@@ -82,7 +81,7 @@
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 4px 10px;
-  border-radius: 6px; /* Forma rectangular redondeada para el texto */
+  border-radius: 6px;
   cursor: pointer;
   font-size: 10px;     
   font-weight: bold;
@@ -99,7 +98,6 @@
   transform: scale(1.05);
 }
 
-/* Responsive para el cel se mantiene igual para no romperlo */
 @media (max-width: 600px) {
   .deudas-container {
     width: 94%;           
@@ -128,7 +126,7 @@
 
   #editarBtn {
     position: absolute; 
-    top: 2px;         
+    top: 2px;          
     right: 2px;
     bottom: auto;     
     padding: 2px 6px;

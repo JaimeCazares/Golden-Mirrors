@@ -7,7 +7,7 @@ function initKg() {
     const cerrarKgModal = document.getElementById("cerrarKgModal");
     const historialKgLista = document.getElementById("historialKgLista");
     
-    // Configurar inputs de archivo para mostrar nombre
+    // Configurar inputs de archivo
     ['fotoFrente', 'fotoLado', 'fotoAtras'].forEach(id => {
         const input = document.getElementById(id);
         if(input) {
@@ -21,40 +21,34 @@ function initKg() {
     let pesoActual = 0;
     let modoEdicion = false;
 
-    // --- CERRAR MODAL CON TECLA ESC ---
+    // --- CERRAR MODAL ---
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-            // Si el modal está visible, ciérralo
-            if (modalKg && modalKg.style.display === "flex") {
-                modalKg.style.display = "none";
-                if (btnHistorial) btnHistorial.style.display = "block";
-                fixBtnPos();
-            }
+        if (e.key === "Escape" && modalKg?.style.display === "flex") {
+            modalKg.style.display = "none";
         }
     });
 
     function actualizarIMC(pesoKg) {
         if (!pesoKg || pesoKg <= 0) return;
-        const altura = 1.80; 
+        const altura = 1.80; // Altura fija ejemplo
         const imc = (pesoKg / (altura * altura)).toFixed(1);
-        
         const valDisplay = document.getElementById('val-imc');
-        const infoCont = document.getElementById('imc-info');
         const indicador = document.getElementById('imc-indicador');
         
         if (valDisplay) valDisplay.innerText = imc;
 
+        // Escala de IMC: de 15 a 40
         let porcentaje = ((imc - 15) / (40 - 15)) * 100;
-        if (porcentaje < 0) porcentaje = 0;
-        if (porcentaje > 100) porcentaje = 100;
-        if (indicador) indicador.style.left = porcentaje + "%";
+        porcentaje = Math.max(0, Math.min(100, porcentaje));
+        if (indicador) indicador.style.left = `calc(${porcentaje}% - 8px)`;
 
-        if (infoCont && valDisplay) {
-            if (imc < 18.5) { valDisplay.style.color = "#00e0ff"; infoCont.style.borderColor = "rgba(0, 224, 255, 0.5)"; }
-            else if (imc >= 18.5 && imc < 25) { valDisplay.style.color = "#00ff66"; infoCont.style.borderColor = "rgba(0, 255, 102, 0.5)"; }
-            else if (imc >= 25 && imc < 30) { valDisplay.style.color = "#ffcc00"; infoCont.style.borderColor = "rgba(255, 204, 0, 0.5)"; }
-            else if (imc >= 30 && imc < 35) { valDisplay.style.color = "#ff8c00"; infoCont.style.borderColor = "rgba(255, 140, 0, 0.5)"; }
-            else { valDisplay.style.color = "#ff3c3c"; infoCont.style.borderColor = "rgba(255, 60, 60, 0.5)"; }
+        // Colores según rango
+        if (valDisplay) {
+            if (imc < 18.5) valDisplay.style.color = "#00e0ff";
+            else if (imc < 25) valDisplay.style.color = "#00ff66";
+            else if (imc < 30) valDisplay.style.color = "#ffcc00";
+            else if (imc < 35) valDisplay.style.color = "#ff8c00";
+            else valDisplay.style.color = "#ff3c3c";
         }
     }
 
@@ -95,11 +89,8 @@ function initKg() {
         listaPesos.forEach(li => {
             li.classList.remove("superior", "actual");
             const p = parseFloat(li.dataset.peso);
-            if (Math.abs(p - pesoActual) < 0.1) {
-                li.classList.add("actual"); 
-            } else if (p > pesoActual) {
-                li.classList.add("superior"); 
-            }
+            if (Math.abs(p - pesoActual) < 0.1) li.classList.add("actual"); 
+            else if (p > pesoActual) li.classList.add("superior"); 
         });
     }
 
@@ -111,49 +102,26 @@ function initKg() {
             } else {
                 modoEdicion = true;
                 editarBtnKg.innerHTML = "Listo ✅";
-                pesoSeleccionado.innerHTML = `Introducir peso actual: <input type="number" step="0.01" id="inputPeso" value="${pesoActual}">`;
+                pesoSeleccionado.innerHTML = `<input type="number" step="0.01" id="inputPeso" value="${pesoActual}" style="width:70px; font-size:14px; text-align:center;">`;
                 const input = document.getElementById("inputPeso");
-                
                 input.focus();
-                input.select(); 
-
-                input.onkeydown = (e) => { 
-                    if (e.key === "Enter") {
-                        guardarPesoActual(input.value); 
-                    } else if (e.key === "Escape") { 
-                        // Cancelar edición con Escape
-                        modoEdicion = false;
-                        editarBtnKg.innerHTML = "Editar ✏️";
-                        pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
-                    }
-                };
+                setTimeout(() => {
+        input.select();
+    }, 10);
+                input.onkeydown = (e) => { if (e.key === "Enter") guardarPesoActual(input.value); };
             }
         };
     }
 
-    function fixBtnPos() {
-        if (!pesoSeleccionado || !btnHistorial) return;
-        const ref = pesoSeleccionado.getBoundingClientRect();
-        btnHistorial.style.left = ref.left + window.scrollX + "px";
-        btnHistorial.style.top = ref.bottom + window.scrollY + 35 + "px";
-    }
-
-    window.addEventListener("resize", fixBtnPos);
-    
     if(btnHistorial) {
         btnHistorial.onclick = () => { 
             if(modalKg) modalKg.style.display = "flex"; 
-            if(btnHistorial) btnHistorial.style.display = "none"; 
             cargarHistorialKg(); 
         };
     }
     
     if(cerrarKgModal) {
-        cerrarKgModal.onclick = () => { 
-            if(modalKg) modalKg.style.display = "none"; 
-            if(btnHistorial) btnHistorial.style.display = "block"; 
-            fixBtnPos(); 
-        };
+        cerrarKgModal.onclick = () => { if(modalKg) modalKg.style.display = "none"; };
     }
 
     fetch("kg/obtenerKg.php", { cache: "no-store" }).then(res => res.json()).then(data => {
@@ -163,8 +131,6 @@ function initKg() {
             actualizarIMC(pesoActual);
         }
         actualizarIndicador();
-        fixBtnPos();
     });
 }
-
 document.addEventListener("DOMContentLoaded", initKg);
