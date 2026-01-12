@@ -1,0 +1,81 @@
+<div class="pesos-container">
+  <ul id="listaPesos">
+    <li data-peso="75">75 kg</li>
+    <li data-peso="80">80 kg</li>
+    <li data-peso="85">85 kg</li>
+    <li data-peso="90">90 kg</li>
+    <li data-peso="95">95 kg</li>
+    <li data-peso="100">100 kg</li>
+    <li data-peso="105">105 kg</li>
+    <li data-peso="110">110 kg</li>
+  </ul>
+
+  <div id="pesoSeleccionado">--.-- kg</div>
+  
+  <button id="editarBtnKg">Editar ✏️</button>
+
+  <div id="imc-info">
+    <div id="imc-lectura">
+      <span id="val-imc">--.-</span>
+      <small id="lbl-imc">IMC</small>
+    </div>
+    <div class="imc-barra-container">
+      <div class="imc-barra-fondo">
+        <div class="tramo bajo"></div>
+        <div class="tramo normal"></div>
+        <div class="tramo sobrepeso"></div>
+        <div class="tramo obesidad"></div>
+        <div class="tramo extrema"></div>
+      </div>
+      <div id="imc-indicador">▼</div>
+    </div>
+  </div>
+</div>
+
+<button id="verHistorialKg" class="btn-historial">📊</button>
+
+<div id="modalKg" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="cerrarKgModal" class="close">&times;</span>
+    <h2 class="grid-semanas-header">📊 Historial Anual</h2>
+    <div id="historialKgLista" class="grid-semanas"></div>
+    <hr style="border: 0; border-top: 1px solid #30475e; margin: 15px 0;">
+    
+    <div class="fila-linea-unica">
+      <button id="btnVerTodo" class="btn-accion-lateral">🖼️ Progreso</button>
+      <h3 class="titulo-central-registro">➕ Nuevo registro</h3>
+      <button id="btnAntesDespues" class="btn-accion-lateral">⚖️ Comparar</button>
+    </div>
+
+    <form id="formHistorialKg">
+      <input type="number" step="0.01" id="nuevoPeso" name="peso" placeholder="Peso (kg)" required>
+      <div class="upload-grid-modern">
+          <div class="upload-item-cool">
+            <label for="fotoFrente">
+                <span class="icon">📷</span> 
+                <span class="label-text">Frente</span>
+                <span id="fileNameFrente" class="file-name">Sin archivo</span>
+            </label>
+            <input type="file" name="foto_frente" id="fotoFrente" accept="image/*">
+          </div>
+          <div class="upload-item-cool">
+             <label for="fotoLado">
+                <span class="icon">📷</span> 
+                <span class="label-text">Lado</span>
+                <span id="fileNameLado" class="file-name">Sin archivo</span>
+            </label>
+            <input type="file" name="foto_lado" id="fotoLado" accept="image/*">
+          </div>
+          <div class="upload-item-cool">
+             <label for="fotoAtras">
+                <span class="icon">📷</span> 
+                <span class="label-text">Atrás</span>
+                <span id="fileNameAtras" class="file-name">Sin archivo</span>
+            </label>
+            <input type="file" name="foto_atras" id="fotoAtras" accept="image/*">
+          </div>
+      </div>
+      <button type="button" id="guardarPesoHistorial">Guardar Registro</button>
+    </form>
+  </div>
+</div>

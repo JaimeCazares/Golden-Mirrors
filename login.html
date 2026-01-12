@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Datos</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body class="login-page">
+
+<div class="login">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="usuario" placeholder="Usuario" required>
+    <input type="password" id="password" placeholder="Contraseña" required>
+    <button onclick="login()">Entrar</button>
+    <p id="respuesta"></p>
+</div>
+
+<script>
+function login() {
+    let datos = new FormData();
+    datos.append("usuario", document.getElementById("usuario").value);
+    datos.append("password", document.getElementById("password").value);
+
+    fetch("login.php", {
+        method: "POST",
+        body: datos
+    })
+    .then(res => res.text())
+    .then(data => {
+        data = data.trim();
+
+        if (data === "INDEX") {
+            window.location.href = "index.html";
+
+        } else if (data === "AHORRO") {
+            window.location.href = "ahorrovaleria/ahorro.php";
+
+        } else {
+            document.getElementById("respuesta").innerHTML = data;
+        }
+    })
+    .catch(() => {
+        document.getElementById("respuesta").innerHTML = "❌ Error de conexión";
+    });
+}
+</script>
+
+<script>
+document.getElementById("usuario").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("password").focus();
+    }
+});
+
+document.getElementById("password").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        login();
+    }
+});
+</script>
+
+</body>
+</html>

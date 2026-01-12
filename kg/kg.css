@@ -1,0 +1,112 @@
+/* --- CONTENEDOR PESOS --- */
+.pesos-container { 
+  position: relative; top: 10px; left: 50%; transform: translateX(-50%); 
+  background: rgba(15, 15, 30, 0.85); border-radius: 10px; padding: 10px 14px; 
+  color: white; z-index: 9999; display: grid; 
+  grid-template-columns: repeat(4, auto) auto 1fr; 
+  column-gap: 8px; row-gap: 10px; max-width: 850px; 
+  backdrop-filter: blur(8px); box-shadow: 0 0 12px rgba(0, 200, 255, 0.15); 
+}
+
+#listaPesos { list-style: none; display: flex; gap: 8px; grid-column: 1 / span 4; padding: 0; margin: 0; }
+
+#listaPesos li { 
+  cursor: default; 
+  background: #333; 
+  padding: 2px 8px; 
+  border-radius: 6px; 
+  font-size: 12px; 
+  transition: transform 0.2s; 
+  white-space: nowrap; 
+}
+
+@keyframes rainbowMove { 
+  0% { background-position: 0% 50%; } 
+  50% { background-position: 100% 50%; } 
+  100% { background-position: 0% 50%; } 
+}
+
+#listaPesos li.actual { 
+  background: #00e0ff; 
+  color: #000; 
+  font-weight: bold; 
+  box-shadow: 0 0 8px #00e0ff;
+  animation: rainbowMove 3s ease infinite; 
+}
+
+#listaPesos li.superior { 
+  background: linear-gradient(270deg, #6a5cff, #c77dff, #ff8fab, #80ffdb, #6a5cff); 
+  background-size: 400% 400%; 
+  animation: rainbowMove 6s ease infinite; 
+  font-weight: 600; 
+  color: white; 
+}
+
+#pesoSeleccionado { 
+  grid-column: 5; grid-row: 1; background: #00e0ff; color: #000; 
+  padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; 
+  text-align: center; display: flex; align-items: center; justify-content: center; 
+  white-space: nowrap; min-width: 100px;
+}
+#pesoSeleccionado input { width: 50px; background: white; border: none; color: #000; font-weight: bold; text-align: center; outline: none; border-radius: 4px; font-size: 11px; margin-left: 5px; }
+
+#editarBtnKg {
+  grid-column: 5; grid-row: 2; justify-self: center; background: #1c2541; 
+  color: white; border: 1px solid rgba(255, 255, 255, 0.1); padding: 4px 10px; 
+  border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: bold; 
+  transition: all 0.25s ease; box-shadow: 0 0 6px rgba(255, 255, 255, 0.1);
+}
+#editarBtnKg:hover { transform: scale(1.05); }
+
+#imc-info {
+  grid-column: 1 / span 4; grid-row: 2; display: flex; align-items: center; justify-content: flex-start; 
+  gap: 15px; background: rgba(0, 0, 0, 0.3); border-radius: 6px; 
+  border: 1px solid rgba(0, 224, 255, 0.2); padding: 4px 12px; height: 35px; width: fit-content;
+}
+#imc-lectura { display: flex; align-items: center; gap: 5px; min-width: 60px; }
+#val-imc { font-weight: bold; font-size: 14px; color: #ffcc00; }
+#lbl-imc { font-size: 9px; opacity: 0.7; text-transform: uppercase; color: white !important; }
+
+.imc-barra-container { position: relative; width: 120px; height: 8px; margin-top: 2px; }
+.imc-barra-fondo { display: flex; width: 100%; height: 100%; border-radius: 10px; overflow: hidden; }
+.tramo { height: 100%; width: 20%; }
+.bajo { background: #00e0ff; } .normal { background: #00ff66; } .sobrepeso { background: #ffcc00; } .obesidad { background: #ff8c00; } .extrema { background: #ff3c3c; }
+#imc-indicador { position: absolute; top: -10px; left: 0%; font-size: 12px; color: white; transition: left 0.5s ease; }
+
+/* MODAL Y ESTILOS */
+.btn-historial { position: absolute; background: transparent; border: none; font-size: 22px; cursor: pointer; z-index: 10000; }
+#modalKg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10001; display: none; justify-content: center; align-items: center; }
+.modal-content { background: #1a1a2e; padding: 25px; border-radius: 16px; width: 95%; max-width: 500px; position: relative; color: white; border: 1px solid #30475e; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+
+.grid-semanas-header { text-align: center; color: #00e0ff; margin-bottom: 15px; font-weight: bold; font-size: 18px; letter-spacing: 1px; }
+#historialKgLista { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; margin-bottom: 15px; }
+.semana-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1/1; border-radius: 4px; cursor: pointer; font-size: 9px; color: #555; background: #0f0f1e; border: 1px solid #333; }
+.semana-btn.completada { background: #00e0ff; color: #000; font-weight: bold; box-shadow: 0 0 5px #00e0ff; border: none; }
+
+.fila-linea-unica { display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 20px 0; gap: 10px; }
+.titulo-central-registro { font-size: 14px; color: #ccc; margin: 0; font-weight: bold; }
+.btn-accion-lateral { background: #252535; color: #00e0ff; border: 1px solid #00e0ff; padding: 6px 12px; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: bold; }
+.btn-accion-lateral:hover { background: #00e0ff; color: #000; }
+
+#nuevoPeso { width: 100%; padding: 12px; background: #0f0f1e; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 16px; box-sizing: border-box; }
+
+.upload-grid-modern { display: flex; flex-direction: column; gap: 12px; }
+.upload-item-cool { position: relative; width: 100%; }
+.upload-item-cool label { display: flex; align-items: center; justify-content: space-between; background: rgba(0, 224, 255, 0.05); border: 1px dashed rgba(0, 224, 255, 0.5); padding: 12px; border-radius: 8px; transition: 0.3s; cursor: pointer; }
+.upload-item-cool:hover label { background: rgba(0, 224, 255, 0.1); border-color: #00e0ff; }
+.upload-item-cool .icon { font-size: 16px; margin-right: 10px; }
+.upload-item-cool .label-text { color: #00e0ff; font-weight: bold; font-size: 12px; flex-grow: 1; text-align: left; }
+.upload-item-cool .file-name { color: #888; font-size: 10px; }
+.upload-item-cool input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
+
+#guardarPesoHistorial { width: 100%; padding: 14px; margin-top: 25px; background: #00e0ff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: #022; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+#guardarPesoHistorial:hover { box-shadow: 0 0 15px rgba(0, 224, 255, 0.6); }
+
+@media (max-width: 600px) {
+  .pesos-container { position: fixed; top: 100px; left: 3% !important; width: 94% !important; transform: none !important; display: flex; flex-direction: column; padding: 8px; gap: 6px; box-sizing: border-box; }
+  #listaPesos { width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+  #imc-info { width: 100%; margin: 0; order: 2; }
+  #pesoSeleccionado { width: 100%; padding: 6px; font-size: 11px; order: 3; }
+  #editarBtnKg { display: none; }
+  .btn-historial { position: relative; top: 5px; margin: 0 auto; display: block; }
+}

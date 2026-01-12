@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Datos</title>
+
+  <link rel="stylesheet" href="style.css?v=1.0.0">
+  <link rel="stylesheet" href="kg/kg.css?v=1.0.0">
+  <link rel="stylesheet" href="deuda/deuda.css?v=1.0.0">
+</head>
+
+<body>
+
+  <div id="kg-wrapper"></div>
+  <div id="deuda-wrapper"></div>
+
+  <script>
+fetch('kg/kg.html', { cache: 'no-store' })
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('kg-wrapper').innerHTML = html;
+    const script = document.createElement('script');
+    script.src = 'kg/kg.js?v=' + Date.now();
+    script.onload = () => initKg(); // 🔥 CLAVE
+    document.body.appendChild(script);
+  });
+</script>
+
+  <script>
+fetch('deuda/deuda.html', { cache: 'no-store' })
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('deuda-wrapper').innerHTML = html;
+    const script = document.createElement('script');
+    script.src = 'deuda/deuda.js?v=' + Date.now();
+    script.onload = () => initDeuda(); // 🔥 CLAVE
+    document.body.appendChild(script);
+  });
+</script>
+
+</body>
+</html>
