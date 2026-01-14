@@ -2,42 +2,67 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Datos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Mi Dashboard</title>
 
-  <link rel="stylesheet" href="style.css?v=1.0.0">
-  <link rel="stylesheet" href="kg/kg.css?v=1.0.0">
-  <link rel="stylesheet" href="deuda/deuda.css?v=1.0.0">
+  <link rel="stylesheet" href="style.css?v=2.0">
+  <link rel="stylesheet" href="kg/kg.css?v=1.0">
+  <link rel="stylesheet" href="deuda/deuda.css?v=1.0">
+  <link rel="stylesheet" href="escalera/escalera.css?v=1.0">
 </head>
 
 <body>
 
-  <div id="kg-wrapper"></div>
-  <div id="deuda-wrapper"></div>
+  <section id="vista-inicio" class="vista-principal activa">
+      <div id="kg-wrapper"></div>
+      <div id="deuda-wrapper"></div>
+  </section>
+
+  <section id="vista-dinamica" class="vista-principal">
+      <div id="contenido-modulo">
+          </div>
+  </section>
+
+  <nav class="dock-nav">
+      
+      <button class="nav-btn activo" onclick="cambiarPestana('inicio')">
+          <span class="icono">🏠</span>
+          <span class="label">Inicio</span>
+      </button>
+
+      <button class="nav-btn" onclick="cambiarPestana('escalera')">
+          <span class="icono">🔥</span>
+          <span class="label">Escalera</span>
+      </button>
+
+      <button class="nav-btn" onclick="cambiarPestana('espejo')">
+          <span class="icono">🪞</span>
+          <span class="label">Espejo</span>
+      </button>
+
+      <button class="nav-btn" onclick="cambiarPestana('registro')">
+          <span class="icono">📝</span>
+          <span class="label">Normales</span>
+      </button>
+
+  </nav>
+
+  <script src="script.js?v=2.0"></script>
 
   <script>
-fetch('kg/kg.html', { cache: 'no-store' })
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('kg-wrapper').innerHTML = html;
-    const script = document.createElement('script');
-    script.src = 'kg/kg.js?v=' + Date.now();
-    script.onload = () => initKg(); // 🔥 CLAVE
-    document.body.appendChild(script);
-  });
-</script>
-
-  <script>
-fetch('deuda/deuda.html', { cache: 'no-store' })
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('deuda-wrapper').innerHTML = html;
-    const script = document.createElement('script');
-    script.src = 'deuda/deuda.js?v=' + Date.now();
-    script.onload = () => initDeuda(); // 🔥 CLAVE
-    document.body.appendChild(script);
-  });
-</script>
+    // Carga inicial de KG
+    fetch('kg/kg.html').then(r=>r.text()).then(h=>{
+        document.getElementById('kg-wrapper').innerHTML=h;
+        let s=document.createElement('script'); s.src='kg/kg.js?v='+Date.now();
+        s.onload=()=>{if(typeof initKg==='function')initKg()}; document.body.appendChild(s);
+    });
+    // Carga inicial de DEUDA
+    fetch('deuda/deuda.html').then(r=>r.text()).then(h=>{
+        document.getElementById('deuda-wrapper').innerHTML=h;
+        let s=document.createElement('script'); s.src='deuda/deuda.js?v='+Date.now();
+        s.onload=()=>{if(typeof initDeuda==='function')initDeuda()}; document.body.appendChild(s);
+    });
+  </script>
 
 </body>
 </html>

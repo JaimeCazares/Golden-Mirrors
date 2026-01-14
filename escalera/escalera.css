@@ -1,0 +1,23 @@
+.escalera-container { text-align: center; color: white; padding-bottom: 40px; }
+.header-escalera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.status-badge { background: #00e0ff; color: black; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; }
+
+.steps-progress { display: flex; justify-content: space-between; margin-bottom: 30px; position: relative; padding: 0 10px; }
+.steps-progress::before { content: ''; position: absolute; top: 50%; left: 10px; right: 10px; height: 2px; background: #333; z-index: 0; }
+.step { width: 35px; height: 35px; background: #1c1c2e; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; position: relative; z-index: 1; transition: 0.3s; color: #666; }
+.step.active { background: #00e0ff; color: black; border-color: #00e0ff; box-shadow: 0 0 10px #00e0ff; transform: scale(1.2); }
+.step.completed { background: #00ff66; border-color: #00ff66; color: black; }
+
+.card-dia { background: linear-gradient(145deg, #1e1e30, #161625); padding: 25px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
+.label-dia { font-size: 1.5rem; font-weight: 900; color: #ff3c3c; display: block; margin-bottom: 15px; }
+.montos-grid { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
+.monto-box { display: flex; flex-direction: column; }
+.monto-box small { color: #888; font-size: 0.8rem; margin-bottom: 5px;}
+#input-monto { background: #0f0f1e; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; width: 80px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+#txt-objetivo { font-size: 1.5rem; font-weight: bold; color: #00ff66; }
+.nota-momio { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; }
+.acciones-dia { display: flex; gap: 10px; }
+.acciones-dia button { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer; color: white; }
+.btn-loss { background: #ff3c3c; opacity: 0.8; }
+.btn-win { background: #00ff66; color: black !important; box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); }
+.btn-reset-total { background: transparent; border: 1px solid #444; color: #666; padding: 10px 20px; border-radius: 8px; margin-top: 20px; width: 100%; cursor: pointer; }

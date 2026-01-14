@@ -1,0 +1,39 @@
+<div class="escalera-container">
+    <div class="header-escalera">
+        <h2>RETO 5 DÍAS</h2>
+        <div id="status-escalera" class="status-badge">ACTIVO</div>
+    </div>
+
+    <div class="steps-progress">
+        <div class="step" id="step-1">1</div>
+        <div class="step" id="step-2">2</div>
+        <div class="step" id="step-3">3</div>
+        <div class="step" id="step-4">4</div>
+        <div class="step" id="step-5">5</div>
+    </div>
+
+    <div class="card-dia">
+        <span class="label-dia" id="dia-display">DÍA 1</span>
+        
+        <div class="montos-grid">
+            <div class="monto-box">
+                <small>Apuesta Inicial</small>
+                <input type="number" id="input-monto" value="100">
+            </div>
+            <div class="arrow">➜</div>
+            <div class="monto-box ganancia">
+                <small>Objetivo (x2)</small>
+                <span id="txt-objetivo">$200</span>
+            </div>
+        </div>
+
+        <p class="nota-momio">Busca un momio de <b>+100 (2.00)</b></p>
+
+        <div class="acciones-dia">
+            <button onclick="resultadoEscalera(false)" class="btn-loss">❌ Perdida</button>
+            <button onclick="resultadoEscalera(true)" class="btn-win">✅ GANADA</button>
+        </div>
+    </div>
+
+    <button onclick="resetEscalera()" class="btn-reset-total">🔄 Reiniciar Reto desde Cero</button>
+</div>
