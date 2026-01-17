@@ -7,13 +7,17 @@ function initKg() {
     const cerrarKgModal = document.getElementById("cerrarKgModal");
     const historialKgLista = document.getElementById("historialKgLista");
     
+    // Elementos del Modal de Visualización
+    const modalVerFotos = document.getElementById("modalVerFotos");
+    const cerrarVerFotos = document.getElementById("cerrarVerFotos");
+
     const formHistorial = document.getElementById("formHistorialKg");
     const btnGuardarRegistro = document.getElementById("guardarPesoHistorial");
 
     let pesoActual = 0;
     let modoEdicion = false;
 
-    // --- CONFIGURACIÓN DE INPUTS DE ARCHIVO (UI) ---
+    // --- CONFIGURACIÓN DE INPUTS DE ARCHIVO ---
     ['fotoFrente', 'fotoLado', 'fotoAtras'].forEach(id => {
         const input = document.getElementById(id);
         if(input) {
@@ -24,24 +28,16 @@ function initKg() {
         }
     });
 
-    // --- CERRAR MODAL ---
-    if(cerrarKgModal) {
-        cerrarKgModal.onclick = () => { if(modalKg) modalKg.style.display = "none"; };
-    }
+    // --- CERRAR MODALES ---
+    if(cerrarKgModal) cerrarKgModal.onclick = () => modalKg.style.display = "none";
+    if(cerrarVerFotos) cerrarVerFotos.onclick = () => modalVerFotos.style.display = "none";
+
+    window.onclick = (event) => {
+        if (event.target == modalKg) modalKg.style.display = "none";
+        if (event.target == modalVerFotos) modalVerFotos.style.display = "none";
+    };
 
     // --- FUNCIONES DE LÓGICA ---
-    function actualizarIMC(pesoKg) {
-        if (!pesoKg || pesoKg <= 0) return;
-        const altura = 1.80; 
-        const imc = (pesoKg / (altura * altura)).toFixed(1);
-        const valDisplay = document.getElementById('val-imc');
-        const indicador = document.getElementById('imc-indicador');
-        if (valDisplay) valDisplay.innerText = imc;
-        let porcentaje = ((imc - 15) / (40 - 15)) * 100;
-        porcentaje = Math.max(0, Math.min(100, porcentaje));
-        if (indicador) indicador.style.left = `calc(${porcentaje}% - 8px)`;
-    }
-
     function cargarHistorialKg() {
         if(!historialKgLista) return;
         historialKgLista.innerHTML = "";
@@ -58,16 +54,36 @@ function initKg() {
                     btn.className = data ? "semana-btn completada" : "semana-btn pendiente";
                     btn.innerHTML = `<b>${i}</b><span>${data ? Math.round(data.peso) : '-'}</span>`;
                     
-                    // ACCIÓN: Ver foto al hacer clic en el número de la semana
                     if (data) {
                         btn.onclick = () => {
-                            if (data.foto_frente) window.open(data.foto_frente, '_blank');
-                            else alert("Este registro no tiene foto.");
+                            // Llenar datos en el modal de visualización
+                            document.getElementById("tituloVerFotos").innerText = "Semana " + data.semana;
+                            document.getElementById("infoPesoModal").innerText = "Peso registrado: " + data.peso + " kg";
+                            
+                            // Asignar imágenes o placeholder si no existen
+                            document.getElementById("imgFrente").src = data.foto_frente ? data.foto_frente : 'img/no-photo.png';
+                            document.getElementById("imgLado").src = data.foto_lado ? data.foto_lado : 'img/no-photo.png';
+                            document.getElementById("imgAtras").src = data.foto_atras ? data.foto_atras : 'img/no-photo.png';
+                            
+                            modalVerFotos.style.display = "flex";
                         };
                     }
                     historialKgLista.appendChild(btn);
                 }
             });
+    }
+
+    // --- RESTO DE FUNCIONES (INDICADORES, IMC, GUARDAR) ---
+    function actualizarIMC(pesoKg) {
+        if (!pesoKg || pesoKg <= 0) return;
+        const altura = 1.80; 
+        const imc = (pesoKg / (altura * altura)).toFixed(1);
+        const valDisplay = document.getElementById('val-imc');
+        const indicador = document.getElementById('imc-indicador');
+        if (valDisplay) valDisplay.innerText = imc;
+        let porcentaje = ((imc - 15) / (40 - 15)) * 100;
+        porcentaje = Math.max(0, Math.min(100, porcentaje));
+        if (indicador) indicador.style.left = `calc(${porcentaje}% - 8px)`;
     }
 
     function guardarPesoActual(valor) {
@@ -94,7 +110,6 @@ function initKg() {
         });
     }
 
-    // --- EVENTOS DE BOTONES ---
     if(editarBtnKg) {
         editarBtnKg.onclick = () => {
             if (modoEdicion) {
@@ -116,17 +131,15 @@ function initKg() {
         };
     }
 
-    // BOTONES DE PROGRESO Y COMPARAR
+    // BOTONES AUXILIARES
     document.getElementById("btnVerTodo").onclick = () => { window.open("kg/ver_progreso.php", "_blank"); };
     document.getElementById("btnAntesDespues").onclick = () => { window.open("kg/ver_progreso.php?modo=comparar", "_blank"); };
 
-    // GUARDAR REGISTRO
     if (btnGuardarRegistro) {
         btnGuardarRegistro.onclick = () => {
             const formData = new FormData(formHistorial);
             btnGuardarRegistro.disabled = true;
             btnGuardarRegistro.innerText = "GUARDANDO...";
-
             fetch("kg/guardarHistorialKg.php", { method: "POST", body: formData })
             .then(res => res.json())
             .then(data => {
@@ -143,7 +156,6 @@ function initKg() {
         };
     }
 
-    // CARGA INICIAL
     fetch("kg/obtenerKg.php", { cache: "no-store" }).then(res => res.json()).then(data => {
         pesoActual = parseFloat(data.peso) || 0;
         if (pesoActual > 0) {
