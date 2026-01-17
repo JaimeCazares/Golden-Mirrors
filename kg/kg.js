@@ -7,7 +7,14 @@ function initKg() {
     const cerrarKgModal = document.getElementById("cerrarKgModal");
     const historialKgLista = document.getElementById("historialKgLista");
     
-    // Configurar inputs de archivo
+    // Elementos del formulario de registro
+    const formHistorial = document.getElementById("formHistorialKg");
+    const btnGuardarRegistro = document.getElementById("guardarPesoHistorial");
+
+    let pesoActual = 0;
+    let modoEdicion = false;
+
+    // --- CONFIGURACIÓN DE INPUTS DE ARCHIVO (UI) ---
     ['fotoFrente', 'fotoLado', 'fotoAtras'].forEach(id => {
         const input = document.getElementById(id);
         if(input) {
@@ -18,15 +25,18 @@ function initKg() {
         }
     });
 
-    let pesoActual = 0;
-    let modoEdicion = false;
-
     // --- CERRAR MODAL ---
+    if(cerrarKgModal) {
+        cerrarKgModal.onclick = () => { if(modalKg) modalKg.style.display = "none"; };
+    }
+
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && modalKg?.style.display === "flex") {
+        if (e.key === "Escape" && modalKg && modalKg.style.display === "flex") {
             modalKg.style.display = "none";
         }
     });
+
+    // --- FUNCIONES DE LÓGICA ---
 
     function actualizarIMC(pesoKg) {
         if (!pesoKg || pesoKg <= 0) return;
@@ -54,12 +64,15 @@ function initKg() {
 
     function cargarHistorialKg() {
         if(!historialKgLista) return;
-        historialKgLista.innerHTML = "";
+        historialKgLista.innerHTML = "<p style='color:white; grid-column: 1/11;'>Cargando...</p>";
+        
         fetch("kg/obtenerHistorialKg.php", { cache: "no-store" })
             .then(res => res.json())
             .then(registros => {
+                historialKgLista.innerHTML = "";
                 const datosSemana = {};
                 registros.forEach(r => { datosSemana[r.semana] = r; });
+                
                 for (let i = 0; i <= 51; i++) {
                     const btn = document.createElement("div");
                     const data = datosSemana[i];
@@ -67,7 +80,8 @@ function initKg() {
                     btn.innerHTML = `<b>${i}</b><span>${data ? Math.round(data.peso) : '-'}</span>`;
                     historialKgLista.appendChild(btn);
                 }
-            });
+            })
+            .catch(err => console.error("Error cargando historial:", err));
     }
 
     function guardarPesoActual(valor) {
@@ -94,6 +108,8 @@ function initKg() {
         });
     }
 
+    // --- EVENTOS DE BOTONES ---
+
     if(editarBtnKg) {
         editarBtnKg.onclick = () => {
             if (modoEdicion) {
@@ -102,12 +118,10 @@ function initKg() {
             } else {
                 modoEdicion = true;
                 editarBtnKg.innerHTML = "Listo ✅";
-                pesoSeleccionado.innerHTML = `<input type="number" step="0.01" id="inputPeso" value="${pesoActual}" style="width:70px; font-size:14px; text-align:center;">`;
+                pesoSeleccionado.innerHTML = `<input type="number" step="0.01" id="inputPeso" value="${pesoActual}" style="width:70px; font-size:14px; text-align:center; border-radius:4px; border:none;">`;
                 const input = document.getElementById("inputPeso");
                 input.focus();
-                setTimeout(() => {
-        input.select();
-    }, 10);
+                setTimeout(() => { input.select(); }, 10);
                 input.onkeydown = (e) => { if (e.key === "Enter") guardarPesoActual(input.value); };
             }
         };
@@ -119,18 +133,67 @@ function initKg() {
             cargarHistorialKg(); 
         };
     }
-    
-    if(cerrarKgModal) {
-        cerrarKgModal.onclick = () => { if(modalKg) modalKg.style.display = "none"; };
+
+    // --- LÓGICA PARA GUARDAR REGISTRO NUEVO (EL QUE FALTABA) ---
+    if (btnGuardarRegistro) {
+        btnGuardarRegistro.onclick = () => {
+            const formData = new FormData(formHistorial);
+            
+            // Validación: Que el peso no esté vacío
+            if (!formData.get("peso") || formData.get("peso") <= 0) {
+                alert("Por favor, ingresa un peso válido.");
+                return;
+            }
+
+            btnGuardarRegistro.disabled = true;
+            btnGuardarRegistro.innerText = "GUARDANDO...";
+
+            fetch("kg/guardarHistorialKg.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.ok) {
+                    alert("¡Registro guardado correctamente!");
+                    // 1. Limpiar Formulario
+                    formHistorial.reset();
+                    // 2. Limpiar nombres de archivos en UI
+                    ['Frente', 'Lado', 'Atras'].forEach(id => {
+                        document.getElementById('fileName' + id).textContent = "Sin archivo";
+                    });
+                    // 3. Refrescar datos
+                    cargarHistorialKg();
+                    // Opcional: Cerrar modal
+                    // modalKg.style.display = "none";
+                } else {
+                    alert("Error: " + (data.error || "Desconocido"));
+                }
+            })
+            .catch(error => {
+                console.error("Error en el envío:", error);
+                alert("Error de conexión al servidor.");
+            })
+            .finally(() => {
+                btnGuardarRegistro.disabled = false;
+                btnGuardarRegistro.innerText = "GUARDAR REGISTRO";
+            });
+        };
     }
 
-    fetch("kg/obtenerKg.php", { cache: "no-store" }).then(res => res.json()).then(data => {
-        pesoActual = parseFloat(data.peso) || 0;
-        if (pesoActual > 0) {
-            pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
-            actualizarIMC(pesoActual);
-        }
-        actualizarIndicador();
-    });
+    // --- CARGA INICIAL ---
+    fetch("kg/obtenerKg.php", { cache: "no-store" })
+        .then(res => res.json())
+        .then(data => {
+            pesoActual = parseFloat(data.peso) || 0;
+            if (pesoActual > 0) {
+                pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
+                actualizarIMC(pesoActual);
+            }
+            actualizarIndicador();
+        })
+        .catch(err => console.error("Error inicial:", err));
 }
+
+// Iniciar cuando el DOM esté listo
 document.addEventListener("DOMContentLoaded", initKg);
