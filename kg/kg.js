@@ -15,7 +15,7 @@ function initKg() {
     let pesoActual = 0;
     let modoEdicion = false;
 
-    // --- MANEJO DE ARCHIVOS (Mantiene tu diseño original) ---
+    // --- MANEJO DE ARCHIVOS ---
     ['Frente', 'Lado', 'Atras'].forEach(id => {
         const input = document.getElementById('foto' + id);
         if(input) {
@@ -28,12 +28,7 @@ function initKg() {
 
     // --- CERRAR MODALES ---
     if(cerrarKgModal) cerrarKgModal.onclick = () => modalKg.style.display = "none";
-    if(cerrarVerFotos) {
-        cerrarVerFotos.onclick = () => {
-            modalVerFotos.style.display = "none";
-            // No cerramos el de historial para que el usuario pueda seguir navegando
-        }
-    }
+    if(cerrarVerFotos) cerrarVerFotos.onclick = () => modalVerFotos.style.display = "none";
 
     window.onclick = (event) => {
         if (event.target == modalKg) modalKg.style.display = "none";
@@ -69,7 +64,6 @@ function initKg() {
             });
     }
 
-    // --- LÓGICA DE IMC Y PESO (Sin cambios) ---
     function actualizarIMC(pesoKg) {
         if (!pesoKg || pesoKg <= 0) return;
         const altura = 1.80; 
@@ -88,12 +82,10 @@ function initKg() {
             const d = new FormData();
             d.append("peso", pesoActual);
             fetch("kg/guardarKg.php", { method: "POST", body: d });
-            actualizarIndicador();
-            actualizarIMC(pesoActual);
+            actualizarIndicador(); actualizarIMC(pesoActual);
             pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
         }
-        modoEdicion = false;
-        editarBtnKg.innerHTML = "Editar ✏️";
+        modoEdicion = false; editarBtnKg.innerHTML = "Editar ✏️";
     }
 
     function actualizarIndicador() {
