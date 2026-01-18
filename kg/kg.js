@@ -33,41 +33,6 @@ function initKg() {
         if (event.target == modalVerFotos) modalVerFotos.style.display = "none";
     };
 
-    function cargarHistorialKg() {
-        if(!historialKgLista) return;
-        historialKgLista.innerHTML = "";
-        
-        fetch("kg/obtenerHistorialKg.php", { cache: "no-store" })
-            .then(res => res.json())
-            .then(registros => {
-                const datosSemana = {};
-                registros.forEach(r => { datosSemana[r.semana] = r; });
-                
-                for (let i = 0; i <= 51; i++) {
-                    const btn = document.createElement("div");
-                    const data = datosSemana[i];
-                    btn.className = data ? "semana-btn completada" : "semana-btn pendiente";
-                    btn.innerHTML = `<b>${i}</b><span>${data ? Math.round(data.peso) : '-'}</span>`;
-                    
-                    if (data) {
-                        btn.onclick = (e) => {
-                            e.stopPropagation();
-                            document.getElementById("tituloVerFotos").innerText = "Semana " + data.semana;
-                            document.getElementById("infoPesoModal").innerText = "Peso: " + data.peso + " kg";
-                            
-                            const noPic = 'img/no-photo.png';
-                            document.getElementById("imgFrente").src = data.foto_frente || noPic;
-                            document.getElementById("imgLado").src = data.foto_lado || noPic;
-                            document.getElementById("imgAtras").src = data.foto_atras || noPic;
-                            
-                            modalVerFotos.style.display = "flex";
-                        };
-                    }
-                    historialKgLista.appendChild(btn);
-                }
-            });
-    }
-
     function actualizarIMC(pesoKg) {
         if (!pesoKg || pesoKg <= 0) return;
         const altura = 1.80; 
@@ -78,27 +43,68 @@ function initKg() {
         let porcentaje = ((imc - 15) / (40 - 15)) * 100;
         porcentaje = Math.max(0, Math.min(100, porcentaje));
         if (indicador) indicador.style.left = `calc(${porcentaje}% - 8px)`;
+        if (valDisplay) {
+            if (imc < 18.5) valDisplay.style.color = "#00e0ff";
+            else if (imc < 25) valDisplay.style.color = "#00ff66";
+            else if (imc < 30) valDisplay.style.color = "#ffcc00";
+            else if (imc < 35) valDisplay.style.color = "#ff8c00";
+            else valDisplay.style.color = "#ff3c3c";
+        }
     }
 
-    function guardarPesoActual(valor) {
-        const p = parseFloat(valor);
-        if (!isNaN(p) && p > 0) {
-            pesoActual = p;
-            const d = new FormData();
-            d.append("peso", pesoActual);
-            fetch("kg/guardarKg.php", { method: "POST", body: d });
-            actualizarIMC(pesoActual);
-        }
-        pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
-        modoEdicion = false;
-        if(editarBtnKg) editarBtnKg.innerHTML = "Editar ✏️";
+    function cargarHistorialKg() {
+        if(!historialKgLista) return;
+        historialKgLista.innerHTML = "";
+        fetch("kg/obtenerHistorialKg.php", { cache: "no-store" })
+            .then(res => res.json())
+            .then(registros => {
+                const datosSemana = {};
+                registros.forEach(r => { datosSemana[r.semana] = r; });
+                for (let i = 0; i <= 51; i++) {
+                    const btn = document.createElement("div");
+                    const data = datosSemana[i];
+                    btn.className = data ? "semana-btn completada" : "semana-btn pendiente";
+                    btn.innerHTML = `<b>${i}</b><span>${data ? Math.round(data.peso) : '-'}</span>`;
+                    if (data) {
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            document.getElementById("tituloVerFotos").innerText = "Semana " + data.semana;
+                            document.getElementById("imgFrente").src = data.foto_frente || 'img/no-photo.png';
+                            document.getElementById("imgLado").src = data.foto_lado || 'img/no-photo.png';
+                            document.getElementById("imgAtras").src = data.foto_atras || 'img/no-photo.png';
+                            document.getElementById("infoPesoModal").innerText = "Peso: " + data.peso + " kg";
+                            modalVerFotos.style.display = "flex";
+                        };
+                    }
+                    historialKgLista.appendChild(btn);
+                }
+            });
+    }
+
+    function actualizarIndicador() {
+        listaPesos.forEach(li => {
+            li.classList.remove("superior", "actual");
+            const p = parseFloat(li.dataset.peso);
+            if (Math.abs(p - pesoActual) < 0.1) li.classList.add("actual"); 
+            else if (p > pesoActual) li.classList.add("superior"); 
+        });
     }
 
     if(editarBtnKg) {
         editarBtnKg.onclick = () => {
             if (modoEdicion) {
                 const input = document.getElementById("inputPeso");
-                if (input) guardarPesoActual(input.value);
+                if (input) {
+                    pesoActual = parseFloat(input.value);
+                    const d = new FormData();
+                    d.append("peso", pesoActual);
+                    fetch("kg/guardarKg.php", { method: "POST", body: d });
+                    actualizarIMC(pesoActual);
+                    actualizarIndicador();
+                    pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
+                    modoEdicion = false;
+                    editarBtnKg.innerHTML = "Editar ✏️";
+                }
             } else {
                 modoEdicion = true;
                 editarBtnKg.innerHTML = "Listo ✅";
@@ -129,6 +135,7 @@ function initKg() {
                     cargarHistorialKg();
                 } else { alert("Error: " + data.error); }
             })
+            .catch(err => alert("Error de conexión al servidor."))
             .finally(() => {
                 btnGuardarRegistro.disabled = false;
                 btnGuardarRegistro.innerText = "GUARDAR REGISTRO";
@@ -142,6 +149,7 @@ function initKg() {
             pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
             actualizarIMC(pesoActual);
         }
+        actualizarIndicador();
     });
 }
 document.addEventListener("DOMContentLoaded", initKg);
