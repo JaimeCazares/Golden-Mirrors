@@ -15,18 +15,16 @@ function initKg() {
     let pesoActual = 0;
     let modoEdicion = false;
 
-    // --- MANEJO DE ARCHIVOS ---
-    ['Frente', 'Lado', 'Atras'].forEach(id => {
-        const input = document.getElementById('foto' + id);
+    ['fotoFrente', 'fotoLado', 'fotoAtras'].forEach(id => {
+        const input = document.getElementById(id);
         if(input) {
             input.onchange = function() {
-                const label = document.getElementById('fileName' + id);
+                const label = document.getElementById('fileName' + id.replace('foto',''));
                 if(label) label.textContent = this.files[0] ? this.files[0].name : "Sin archivo";
             };
         }
     });
 
-    // --- CERRAR MODALES ---
     if(cerrarKgModal) cerrarKgModal.onclick = () => modalKg.style.display = "none";
     if(cerrarVerFotos) cerrarVerFotos.onclick = () => modalVerFotos.style.display = "none";
 
@@ -35,16 +33,24 @@ function initKg() {
         if (event.target == modalVerFotos) modalVerFotos.style.display = "none";
     };
 
-    // FUNCIONALIDAD TECLA ESC
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            if (modalVerFotos.style.display === "flex") {
-                modalVerFotos.style.display = "none";
-            } else if (modalKg.style.display === "flex") {
-                modalKg.style.display = "none";
-            }
+    function actualizarIMC(pesoKg) {
+        if (!pesoKg || pesoKg <= 0) return;
+        const altura = 1.80; 
+        const imc = (pesoKg / (altura * altura)).toFixed(1);
+        const valDisplay = document.getElementById('val-imc');
+        const indicador = document.getElementById('imc-indicador');
+        if (valDisplay) valDisplay.innerText = imc;
+        let porcentaje = ((imc - 15) / (40 - 15)) * 100;
+        porcentaje = Math.max(0, Math.min(100, porcentaje));
+        if (indicador) indicador.style.left = `calc(${porcentaje}% - 8px)`;
+        if (valDisplay) {
+            if (imc < 18.5) valDisplay.style.color = "#00e0ff";
+            else if (imc < 25) valDisplay.style.color = "#00ff66";
+            else if (imc < 30) valDisplay.style.color = "#ffcc00";
+            else if (imc < 35) valDisplay.style.color = "#ff8c00";
+            else valDisplay.style.color = "#ff3c3c";
         }
-    });
+    }
 
     function cargarHistorialKg() {
         if(!historialKgLista) return;
@@ -75,30 +81,6 @@ function initKg() {
             });
     }
 
-    function actualizarIMC(pesoKg) {
-        if (!pesoKg || pesoKg <= 0) return;
-        const altura = 1.80; 
-        const imc = (pesoKg / (altura * altura)).toFixed(1);
-        const valDisplay = document.getElementById('val-imc');
-        const indicador = document.getElementById('imc-indicador');
-        if (valDisplay) valDisplay.innerText = imc;
-        let porcentaje = ((imc - 15) / (40 - 15)) * 100;
-        porcentaje = Math.max(0, Math.min(100, porcentaje));
-        if (indicador) indicador.style.left = `calc(${porcentaje}% - 8px)`;
-    }
-
-    function guardarPesoActual(valor) {
-        pesoActual = parseFloat(valor) || 0;
-        if(pesoActual > 0) {
-            const d = new FormData();
-            d.append("peso", pesoActual);
-            fetch("kg/guardarKg.php", { method: "POST", body: d });
-            actualizarIndicador(); actualizarIMC(pesoActual);
-            pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
-        }
-        modoEdicion = false; editarBtnKg.innerHTML = "Editar ✏️";
-    }
-
     function actualizarIndicador() {
         listaPesos.forEach(li => {
             li.classList.remove("superior", "actual");
@@ -112,7 +94,17 @@ function initKg() {
         editarBtnKg.onclick = () => {
             if (modoEdicion) {
                 const input = document.getElementById("inputPeso");
-                if (input) guardarPesoActual(input.value);
+                if (input) {
+                    pesoActual = parseFloat(input.value);
+                    const d = new FormData();
+                    d.append("peso", pesoActual);
+                    fetch("kg/guardarKg.php", { method: "POST", body: d });
+                    actualizarIMC(pesoActual);
+                    actualizarIndicador();
+                    pesoSeleccionado.textContent = pesoActual.toFixed(2) + " kg";
+                    modoEdicion = false;
+                    editarBtnKg.innerHTML = "Editar ✏️";
+                }
             } else {
                 modoEdicion = true;
                 editarBtnKg.innerHTML = "Listo ✅";
@@ -140,10 +132,10 @@ function initKg() {
                 if (data.ok) {
                     alert("¡Guardado!");
                     formHistorial.reset();
-                    ['Frente', 'Lado', 'Atras'].forEach(x => document.getElementById('fileName'+x).textContent = "Sin archivo");
                     cargarHistorialKg();
                 } else { alert("Error: " + data.error); }
             })
+            .catch(err => alert("Error de conexión al servidor."))
             .finally(() => {
                 btnGuardarRegistro.disabled = false;
                 btnGuardarRegistro.innerText = "GUARDAR REGISTRO";
@@ -158,6 +150,17 @@ function initKg() {
             actualizarIMC(pesoActual);
         }
         actualizarIndicador();
+    });
+
+    // EVENTO ESC PARA CERRAR MODALES
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            if (modalVerFotos.style.display === "flex") {
+                modalVerFotos.style.display = "none";
+            } else if (modalKg.style.display === "flex") {
+                modalKg.style.display = "none";
+            }
+        }
     });
 }
 document.addEventListener("DOMContentLoaded", initKg);
