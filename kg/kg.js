@@ -15,6 +15,7 @@ function initKg() {
     let pesoActual = 0;
     let modoEdicion = false;
 
+    // --- MANEJO DE ARCHIVOS ---
     ['Frente', 'Lado', 'Atras'].forEach(id => {
         const input = document.getElementById('foto' + id);
         if(input) {
@@ -25,6 +26,7 @@ function initKg() {
         }
     });
 
+    // --- CERRAR MODALES ---
     if(cerrarKgModal) cerrarKgModal.onclick = () => modalKg.style.display = "none";
     if(cerrarVerFotos) cerrarVerFotos.onclick = () => modalVerFotos.style.display = "none";
 
@@ -33,10 +35,9 @@ function initKg() {
         if (event.target == modalVerFotos) modalVerFotos.style.display = "none";
     };
 
-    // FUNCIONALIDAD TECLA ESC PARA AMBOS MODALES
+    // FUNCIONALIDAD TECLA ESC
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-            // Primero intentamos cerrar el de fotos si está abierto
             if (modalVerFotos.style.display === "flex") {
                 modalVerFotos.style.display = "none";
             } else if (modalKg.style.display === "flex") {
